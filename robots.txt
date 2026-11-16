@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /tests/
+Disallow: /README.md
+Disallow: /LICENSE
+Disallow: /DEPLOY.md
+
+# بعد النشر على Cloudflare Pages أضف سطر الخريطة بالرابط الحقيقي، ثم احذف هذا التعليق:
+# Sitemap: https://USERNAME.pages.dev/sitemap.xml

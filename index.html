@@ -1,0 +1,2483 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2026 AutoSphere Global. All rights reserved. See LICENSE. -->
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="copyright" content="Copyright 2026 AutoSphere Global. All rights reserved." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b1220" />
+    <meta name="description" content="AutoSphere Global - دليلك لخدمات السيارات في العراق: صيانة، مساعدة على الطرق، وطلب نجدة طارئة." />
+    <meta property="og:title" content="AutoSphere Global" />
+    <meta property="og:description" content="طلب نجدة طارئة وصيانة السيارات في العراق عبر واتساب." />
+    <meta property="og:type" content="website" />
+    <title>AutoSphere Global | خدمات السيارات في العراق</title>
+    <meta name="robots" content="index, follow" />
+    <meta property="og:site_name" content="AutoSphere Global" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"AutoSphere Global","description":"دليل خدمات السيارات في العراق: صيانة، إطارات، محطات وقود، وطلب نجدة عبر واتساب.","areaServed":{"@type":"Country","name":"Iraq"},"inLanguage":["ar","en","ku"]}</script>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9A%97%3C/text%3E%3C/svg%3E" />
+    <link rel="manifest" href="manifest.json" />
+    
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- Leaflet CSS (1.9.4 مع SRI) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        if (window.tailwind) {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            ink: '#0b1220',
+                            panel: '#111c2e',
+                            line: '#25334a',
+                            accent: '#f97316',
+                            mint: '#2dd4bf'
+                        },
+                        fontFamily: { sans: ['Tajawal', 'Noto Sans Arabic', 'Tahoma', 'Arial', 'sans-serif'] },
+                        boxShadow: { glow: '0 18px 55px rgba(249,115,22,.14)' }
+                    }
+                }
+            };
+        }
+    </script>
+    <style>
+        /* أنماط احتياطية: تبقي الصفحة مقروءة وقابلة للاستخدام إذا تعذّر تحميل Tailwind */
+        body { background-color:#0b1220; color:#f3f4f6; font-family:'Tajawal','Noto Sans Arabic',Tahoma,Arial,sans-serif; margin:0; line-height:1.6; }
+        header, footer, section, .bg-panel { background-color:#111c2e; }
+        main { max-width:42rem; margin:0 auto; padding:1rem; }
+        section { border:1px solid #25334a; border-radius:.75rem; padding:1.25rem; margin-bottom:1.5rem; }
+        label { display:block; margin-bottom:.25rem; font-size:.875rem; }
+        input, select, textarea { display:block; width:100%; box-sizing:border-box; background:#0b1220; color:inherit; border:1px solid #25334a; border-radius:.5rem; padding:.6rem .75rem; font:inherit; }
+        select option { background:#0b1220; color:#f3f4f6; }
+        button, .btn { display:inline-block; cursor:pointer; border:0; border-radius:.5rem; padding:.7rem 1rem; min-height:44px; font:inherit; font-weight:700; background:#f97316; color:#0b1220; }
+        a { color:#f97316; }
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline:2px solid #f97316; outline-offset:2px; }
+        button:disabled, [aria-disabled="true"] { opacity:.6; cursor:not-allowed; pointer-events:none; }
+        img, svg { max-width:100%; }
+        #map { height:16rem; width:100%; border-radius:.5rem; border:1px solid #25334a; }
+        .leaflet-container { font-family:inherit; }
+        .hidden { display:none !important; }
+        /* ===== لمسات حيوية للواجهة (تبقى خفيفة وتحترم تقليل الحركة) ===== */
+        body { background-image: radial-gradient(900px 480px at 88% -8%, rgba(249,115,22,.16), transparent 60%), radial-gradient(700px 420px at -8% 35%, rgba(45,212,191,.09), transparent 60%); }
+        header { box-shadow: 0 1px 0 rgba(249,115,22,.35); }
+        .hero-glow { background: radial-gradient(ellipse at top, rgba(249,115,22,.20), transparent 62%), #111c2e; border-color: rgba(249,115,22,.22); }
+        .gradient-title { background: linear-gradient(90deg, #fdba74, #f97316 55%, #2dd4bf); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .card-lift { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+        .card-lift:hover { transform: translateY(-3px); border-color: #f97316; box-shadow: 0 14px 32px rgba(249,115,22,.14); }
+        .chip-btn { border: 1px solid #25334a; background: #0b1220; color: #e5e7eb; border-radius: 999px; padding: .4rem .9rem; font-size: .8rem; font-weight: 700; min-height: 40px; }
+        .chip-btn:hover, .chip-btn[aria-pressed="true"] { border-color: #2dd4bf; color: #2dd4bf; background: rgba(45,212,191,.08); }
+        .live-dot { animation: live-pulse 1.8s ease-in-out infinite; }
+        @keyframes live-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .45; transform: scale(.8); } }
+        .modal-backdrop { background: rgba(2,6,23,.78); backdrop-filter: blur(7px); }
+        .chip-btn[aria-pressed="true"] { border-color: #f97316; color: #fdba74; background: rgba(249,115,22,.12); }
+        @media (prefers-reduced-motion: reduce) {
+            .live-dot { animation: none; }
+            .card-lift { transition: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
+        }
+    </style>
+</head>
+<body class="bg-ink text-slate-100 min-h-screen flex flex-col font-sans">
+
+    <!-- نافذة إرشادية تعليمية للمستخدم (Onboarding / Guide Modal) -->
+    <div id="guide-modal" role="dialog" aria-modal="true" aria-labelledby="guide-title" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-panel border border-line rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-glow">
+            <h3 id="guide-title" class="text-xl font-bold text-accent" data-i18n="guideTitle">كيف تستخدم منصة AutoSphere الطارئة؟</h3>
+            <ul class="space-y-2 text-sm text-slate-300 list-disc list-inside leading-relaxed">
+                <li data-i18n="guideStep1">املأ حقول البيانات الشخصية ونوع السيارة بدقة.</li>
+                <li data-i18n="guideStep2">حدد موقعك التلقائي عبر زر GPS أو اكتب أقرب علامة دالة.</li>
+                <li data-i18n="guideStep3">اضغط على زر إرسال لتجهيز الرسالة وفتح تطبيق واتساب فوراً.</li>
+                <li data-i18n="guideStep4">اضغط على زر "إرسال" داخل واتساب لتصل رسالتك للمركز المختص.</li>
+            </ul>
+            <p class="text-xs text-slate-400 leading-relaxed" data-i18n="guideDisclaimer"></p>
+            <div class="flex justify-end pt-2">
+                <button type="button" id="close-guide-btn" class="bg-accent text-ink font-bold px-5 py-2 rounded hover:bg-orange-600 transition text-sm" data-i18n="guideClose">فهمت، ابدأ الاستخدام</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-30 bg-ink/90 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+            <a href="#home" class="flex items-center gap-3 shrink-0">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 grid place-items-center shadow-glow"><svg viewBox="0 0 24 24" class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 13 2-5.5A2.5 2.5 0 0 1 7.35 6h9.3a2.5 2.5 0 0 1 2.35 1.5L21 13v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5Z"/><path d="M5 13h14M7 16h.01M17 16h.01M7 9h10"/></svg></div>
+                <div>
+                    <div class="text-lg font-black text-white leading-5">AutoSphere <span class="text-orange-400">Global</span></div>
+                    <div class="text-xs text-slate-400 mt-1" data-i18n="tagline">كل خدمات سيارتك في مكان واحد</div>
+                </div>
+            </a>
+            <nav class="hidden md:flex items-center gap-7 text-sm text-slate-300">
+                <a href="#directory" class="hover:text-orange-300 transition" data-i18n="navDir">دليل الخدمات</a>
+                <a href="#map-section" class="hover:text-orange-300 transition" data-i18n="navMap">الخريطة</a>
+                <a href="#how" class="hover:text-orange-300 transition" data-i18n="navHow">كيف تعمل المنصة؟</a>
+            </nav>
+            <div class="flex items-center gap-2 shrink-0">
+                <label class="sr-only" for="lang-select" data-i18n="langLabel">اللغة</label>
+                <select id="lang-select" class="bg-panel border border-line rounded-lg px-2 py-2 text-sm outline-none">
+                    <option value="ar">العربية</option>
+                    <option value="en">English</option>
+                    <option value="ku">کوردی</option>
+                </select>
+                <a href="#emergency" class="inline-flex items-center gap-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-white font-bold text-sm px-4 py-2.5 shadow-glow transition"><span aria-hidden="true">!</span><span data-i18n="ctaHeader">ألحقني الآن</span></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- نافذة التسجيل عبر واتساب: طلب الطوارئ متاح دائماً بدون تسجيل -->
+    <div id="gate-modal" role="dialog" aria-modal="true" aria-labelledby="gate-title" class="hidden fixed inset-0 z-[60] modal-backdrop items-center justify-center p-4">
+        <div class="w-full max-w-md bg-panel border border-line rounded-3xl p-6 space-y-4 shadow-2xl">
+            <h2 id="gate-title" class="text-2xl font-black text-white" data-i18n="gateTitle">سجّل للدخول إلى الدليل</h2>
+            <p class="text-sm text-slate-400 leading-relaxed" data-i18n="gateText">التسجيل عبر واتساب فقط.</p>
+            <form id="gate-form" class="space-y-3" novalidate>
+                <input id="gate-name" type="text" maxlength="60" autocomplete="name" data-i18n-ph="gateName" class="w-full bg-ink border border-line rounded-xl px-4 py-3 outline-none focus:border-accent" />
+                <input id="gate-phone" type="tel" inputmode="tel" dir="ltr" autocomplete="tel" data-i18n-ph="gatePhone" placeholder="07xxxxxxxxx" class="w-full bg-ink border border-line rounded-xl px-4 py-3 outline-none focus:border-accent" />
+                <p id="gate-status" class="text-sm min-h-[1.25rem]" aria-live="polite"></p>
+                <button type="submit" id="gate-send" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition" data-i18n="gateSend">سجّل عبر واتساب</button>
+            </form>
+            <button type="button" id="gate-done" class="hidden w-full border border-line hover:border-accent rounded-xl py-3 text-sm font-bold text-slate-200 transition" data-i18n="gateDone">أرسلت الرسالة، ادخل الآن</button>
+            <a href="#emergency" id="gate-emergency" class="block text-center text-sm font-bold text-orange-300 hover:text-orange-200" data-i18n="gateEmergency">طلب نجدة بدون تسجيل</a>
+        </div>
+    </div>
+
+    <main id="home" class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 py-10 space-y-20">
+
+        <!-- الواجهة الرئيسية -->
+        <section class="grid lg:grid-cols-[1.05fr_.95fr] gap-12 items-center pt-4 sm:pt-10">
+            <div>
+                <div class="inline-flex items-center gap-2 rounded-full border border-orange-400/20 bg-orange-400/10 px-3 py-1.5 text-xs text-orange-200 mb-6">
+                    <span class="live-dot w-2 h-2 rounded-full bg-emerald-400"></span><span data-i18n="heroBadge">دليل خدمات السيارات في العراق</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-[56px] leading-[1.25] font-black text-white">
+                    <span data-i18n="heroTitle">سيارتك تحتاج عناية؟</span><br />
+                    <span class="text-transparent bg-clip-text bg-gradient-to-l from-orange-300 to-orange-500" data-i18n="heroTitle2">نحن نوصلك بالحل.</span>
+                </h1>
+                <p class="text-slate-400 text-base sm:text-lg leading-8 mt-5 max-w-xl" data-i18n="heroText">اكتشف ورش الصيانة ومحطات الوقود وخدمات الإطارات بالقرب منك، أو اطلب المساعدة عند الطوارئ بخطوات بسيطة.</p>
+
+                <form id="hero-search-form" class="mt-8 bg-panel/80 border border-line rounded-2xl p-3 sm:p-4 max-w-2xl shadow-2xl" role="search">
+                    <div class="grid sm:grid-cols-[1fr_170px_auto] gap-2">
+                        <div class="relative">
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">⌕</span>
+                            <input id="hero-search" type="search" data-i18n-ph="heroSearchPh" placeholder="ابحث عن ورشة، كهربائي، بنچر..." aria-label="ابحث عن خدمة" class="w-full bg-ink border border-line rounded-xl pr-10 pl-4 py-3 outline-none focus:border-accent" />
+                        </div>
+                        <select id="hero-city" aria-label="اختر المدينة" class="w-full bg-ink border border-line rounded-xl px-3 py-3 outline-none focus:border-accent"></select>
+                        <button type="submit" class="bg-orange-500 hover:bg-orange-400 text-white rounded-xl px-6 py-3 font-bold transition" data-i18n="searchNow">ابحث الآن</button>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 mt-3 px-1 text-xs text-slate-400">
+                        <span data-i18n="qLabel">الأكثر بحثاً:</span>
+                        <button type="button" class="hero-quick hover:text-orange-300" data-i18n="qBody">سمكري</button><span>·</span>
+                        <button type="button" class="hero-quick hover:text-orange-300" data-i18n="qEv">كهربائي سيارات</button><span>·</span>
+                        <button type="button" class="hero-quick hover:text-orange-300" data-i18n="qTires">إطارات</button>
+                    </div>
+                </form>
+
+                <div class="flex flex-wrap items-center gap-3 mt-6">
+                    <a href="#directory" class="inline-flex items-center gap-2 text-sm font-bold text-white hover:text-orange-300 transition" data-i18n="exploreDir">استكشف الدليل</a>
+                    <span class="text-slate-700">|</span>
+                    <a href="#emergency" class="inline-flex items-center gap-2 text-sm font-bold text-orange-300 hover:text-orange-200 transition" data-i18n="needHelp">أحتاج مساعدة عاجلة</a>
+                    <a id="call-emergency" href="#" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-xl text-sm transition text-center opacity-60 cursor-not-allowed pointer-events-none" aria-disabled="true">
+                        <span data-i18n="callEmergency">اتصال بالطوارئ</span> <span dir="ltr" class="font-normal" id="call-emergency-label"></span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="relative">
+                <div class="absolute inset-6 rounded-[36px] border border-white/5 rotate-6" aria-hidden="true"></div>
+                <div class="relative bg-panel border border-line rounded-[30px] p-5 sm:p-7 w-full max-w-md mx-auto shadow-2xl overflow-hidden">
+                    <div class="absolute -left-12 -top-12 w-40 h-40 rounded-full bg-orange-500/10 blur-2xl" aria-hidden="true"></div>
+                    <div class="relative flex items-center justify-between mb-6">
+                        <div><div class="text-sm text-slate-400" data-i18n="ccLabel">مركز التحكم</div><div class="text-xl font-extrabold text-white mt-1" data-i18n="ccTitle">رحلتك أسهل معنا</div></div>
+                        <div class="w-12 h-12 rounded-2xl bg-orange-500/15 border border-orange-400/20 grid place-items-center text-2xl" aria-hidden="true">🚘</div>
+                    </div>
+                    <div class="relative grid grid-cols-2 gap-3">
+                        <a href="#directory" class="card-lift rounded-2xl bg-ink border border-line p-4 block"><div class="text-2xl mb-3" aria-hidden="true">🔧</div><div class="font-bold text-white" data-i18n="tile1">مراكز الصيانة</div><div class="text-xs text-slate-400 mt-1" data-i18n="tile1s">ورش وخبراء السيارات</div></a>
+                        <a href="#map-section" class="card-lift rounded-2xl bg-ink border border-line p-4 block"><div class="text-2xl mb-3" aria-hidden="true">📍</div><div class="font-bold text-white" data-i18n="tile2">خريطة تفاعلية</div><div class="text-xs text-slate-400 mt-1" data-i18n="tile2s">اعثر على الأقرب إليك</div></a>
+                        <a href="#directory" class="card-lift rounded-2xl bg-ink border border-line p-4 block"><div class="text-2xl mb-3" aria-hidden="true">🛞</div><div class="font-bold text-white" data-i18n="tile3">خدمات الطريق</div><div class="text-xs text-slate-400 mt-1" data-i18n="tile3s">إطارات وبطاريات وسحب</div></a>
+                        <a href="#emergency" class="card-lift rounded-2xl bg-orange-500/10 border border-orange-400/30 p-4 block"><div class="text-2xl mb-3" aria-hidden="true">🆘</div><div class="font-bold text-orange-200" data-i18n="tile4">ألحقني</div><div class="text-xs text-orange-200/70 mt-1" data-i18n="tile4s">اطلب النجدة بسرعة</div></a>
+                    </div>
+                    <div class="relative flex items-center gap-3 mt-5 rounded-2xl bg-ink/70 border border-white/5 p-3">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-500/15 grid place-items-center text-emerald-300" aria-hidden="true">✓</div>
+                        <div class="flex-1"><div class="text-sm font-bold text-white" data-i18n="waRowT">تواصل مباشر عبر واتساب</div><div class="text-xs text-slate-400 mt-0.5" data-i18n="waRowS">استفسر عن الخدمة قبل التوجه</div></div>
+                        <span class="text-emerald-400 text-xs font-bold" data-i18n="waRowB">سهل وسريع</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- مؤشرات -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-3 -mt-8">
+            <div class="bg-panel border border-line rounded-2xl p-5"><div class="text-2xl font-black text-white" data-i18n="st1">GPS</div><div class="text-xs text-slate-400 mt-1" data-i18n="st1s">مشاركة موقعك بإذنك</div></div>
+            <div class="bg-panel border border-line rounded-2xl p-5"><div class="text-2xl font-black text-white" data-i18n="st2">واتساب</div><div class="text-xs text-slate-400 mt-1" data-i18n="st2s">تواصل مباشر وسهل</div></div>
+            <div class="bg-panel border border-line rounded-2xl p-5"><div class="text-2xl font-black text-white" data-i18n="st3">3 لغات</div><div class="text-xs text-slate-400 mt-1" data-i18n="st3s">العربية والإنجليزية والكردية</div></div>
+            <div class="bg-panel border border-line rounded-2xl p-5"><div class="text-2xl font-black text-white" data-i18n="st4">خريطة</div><div class="text-xs text-slate-400 mt-1" data-i18n="st4s">OpenStreetMap</div></div>
+        </section>
+
+        <!-- دليل الخدمات -->
+        <div id="directory" class="scroll-mt-24 space-y-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <div class="text-orange-400 text-xs font-bold tracking-widest mb-2" data-i18n="dirEyebrow">دليل الخدمات</div>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white" data-i18n="dirTitle">اعثر على الخدمة المناسبة</h2>
+                    <p class="text-slate-400 mt-2" data-i18n="dirSub">تصفح الفئات وابحث حسب المدينة أو نوع الخدمة.</p>
+                </div>
+                <div id="dir-chips" class="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="تصفية حسب نوع الخدمة">
+                    <button type="button" class="chip-btn" data-service="" aria-pressed="true" data-i18n="chipAll">الكل</button>
+                    <button type="button" class="chip-btn" data-service="fuel" aria-pressed="false" data-i18n="svcFuel">تعبئة الوقود</button>
+                    <button type="button" class="chip-btn" data-service="ev" aria-pressed="false" data-i18n="svcEv">شحن السيارات الكهربائية</button>
+                    <button type="button" class="chip-btn" data-service="tow" aria-pressed="false" data-i18n="svcTow">السحب</button>
+                </div>
+            </div>
+
+        <!-- مراكز الصيانة -->
+        <section id="centers" class="scroll-mt-6 space-y-4">
+            <div class="flex justify-between items-center flex-wrap gap-2">
+                <h2 class="text-xl font-bold" data-i18n="centersTitle">مراكز الصيانة المتعاونة</h2>
+                <div class="flex gap-2 text-sm flex-wrap">
+                    <select id="filter-gov" class="bg-panel border border-line rounded px-2 py-1 outline-none text-xs">
+                        <option value="" data-i18n="allGovs">كل المحافظات</option>
+                    </select>
+                    <select id="filter-service" class="bg-panel border border-line rounded px-2 py-1 outline-none text-xs">
+                        <option value="" data-i18n="allServices">كل الخدمات</option>
+                    </select>
+                </div>
+            </div>
+            <div id="centers-list" class="space-y-4"></div>
+        </section>
+
+        <!-- الأنشطة المسجّلة من أصحابها (ورش، غسيل، محطات، إطفاء، تبديل زيوت...) -->
+        <section id="providers" class="scroll-mt-6 space-y-4">
+            <div class="flex justify-between items-end flex-wrap gap-3">
+                <div>
+                    <h2 class="text-xl font-bold" data-i18n="providersTitle">أنشطة مسجّلة في الدليل</h2>
+                    <p class="text-sm text-slate-400 mt-1" data-i18n="providersIntro">تواصل مباشرة مع النشاط من الأزرار. كل نشاط أضافه صاحبه وتمت مراجعته.</p>
+                </div>
+                <select id="filter-category" class="bg-panel border border-line rounded px-2 py-1 outline-none text-xs" aria-label="نوع النشاط">
+                    <option value="" data-i18n="allCategories">كل الأنشطة</option>
+                </select>
+            </div>
+            <div id="providers-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+        </section>
+
+        <!-- تسجيل صاحب نشاط: لا يُحفظ شيء في الموقع، والطلب يُرسل للإدارة عبر واتساب -->
+        <section id="register" class="scroll-mt-6 space-y-5 bg-panel border border-line rounded-xl p-6">
+            <div>
+                <h2 class="text-2xl font-bold text-accent" data-i18n="regTitle">سجّل نشاطك في الدليل</h2>
+                <p class="text-sm text-slate-400 mt-2 leading-relaxed" data-i18n="regIntro">أضف نشاطك ليراه الزبائن. لا يُحفظ التسجيل في الموقع؛ يُرسل طلبك إلى الإدارة عبر واتساب للمراجعة، ولا يُنشر النشاط إلا بعد التحقق.</p>
+            </div>
+
+            <form id="register-form" class="space-y-4" novalidate>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="reg-name" class="block mb-1 text-sm"><span data-i18n="regName">اسم النشاط</span> <span class="text-red-400">*</span></label>
+                        <input type="text" id="reg-name" maxlength="80" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none" />
+                    </div>
+                    <div>
+                        <label for="reg-category" class="block mb-1 text-sm"><span data-i18n="regCategory">نوع النشاط</span> <span class="text-red-400">*</span></label>
+                        <select id="reg-category" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none"></select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="reg-gov" class="block mb-1 text-sm"><span data-i18n="regGov">المحافظة</span> <span class="text-red-400">*</span></label>
+                        <select id="reg-gov" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none"></select>
+                    </div>
+                    <div>
+                        <label for="reg-area" class="block mb-1 text-sm" data-i18n="regArea">المنطقة أو أقرب نقطة</label>
+                        <input type="text" id="reg-area" maxlength="80" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none" />
+                    </div>
+                </div>
+
+                <!-- ترتيب حقول التواصل: الرقم الشخصي أولاً، ثم واتساب، ثم فيسبوك وإنستغرام، وآخراً تيك توك -->
+                <div>
+                    <label for="reg-personal" class="block mb-1 text-sm"><span data-i18n="regPersonal">رقمك الشخصي (للتواصل)</span> <span class="text-red-400">*</span></label>
+                    <input type="tel" id="reg-personal" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="07xxxxxxxxx" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none" />
+                </div>
+                <div>
+                    <label for="reg-wa" class="block mb-1 text-sm" data-i18n="regWa">رقم واتساب النشاط (اختياري)</label>
+                    <input type="tel" id="reg-wa" inputmode="tel" dir="ltr" placeholder="07xxxxxxxxx" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none" />
+                </div>
+                <div>
+                    <label for="reg-fb" class="block mb-1 text-sm" data-i18n="regFb">رابط فيسبوك (اختياري)</label>
+                    <input type="url" id="reg-fb" dir="ltr" placeholder="https://facebook.com/..." class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none" />
+                </div>
+                <div>
+                    <label for="reg-ig" class="block mb-1 text-sm" data-i18n="regIg">رابط إنستغرام (اختياري)</label>
+                    <input type="url" id="reg-ig" dir="ltr" placeholder="https://instagram.com/..." class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none" />
+                </div>
+                <div>
+                    <label for="reg-tt" class="block mb-1 text-sm" data-i18n="regTt">رابط تيك توك (اختياري)</label>
+                    <input type="url" id="reg-tt" dir="ltr" placeholder="https://tiktok.com/@..." class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none" />
+                </div>
+
+                <div>
+                    <label for="reg-hours" class="block mb-1 text-sm" data-i18n="regHours">ساعات العمل</label>
+                    <input type="text" id="reg-hours" maxlength="80" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none" />
+                </div>
+                <div>
+                    <label for="reg-desc" class="block mb-1 text-sm" data-i18n="regDesc">وصف مختصر</label>
+                    <textarea id="reg-desc" rows="3" maxlength="300" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none"></textarea>
+                </div>
+
+                <div class="flex items-start gap-2">
+                    <input type="checkbox" id="reg-consent" class="w-4 h-4 mt-1 accent-accent" />
+                    <label for="reg-consent" class="text-sm cursor-pointer leading-relaxed" data-i18n="regConsent">أؤكد أن المعلومات صحيحة، وأوافق على نشرها في الدليل بعد المراجعة.</label>
+                </div>
+
+                <p id="reg-status" class="text-sm min-h-[1.5rem]" aria-live="polite"></p>
+                <button type="submit" id="reg-submit" class="w-full bg-accent text-ink font-bold py-3 rounded hover:bg-orange-600 transition" data-i18n="regSubmit">أرسل طلب التسجيل عبر واتساب</button>
+                <p class="text-xs text-slate-400 leading-relaxed" data-i18n="regPrivacy">تُجهز الرسالة محلياً وتُفتح في واتساب، وتضغط أنت «إرسال» بنفسك.</p>
+            </form>
+        </section>
+
+        </div>
+
+        <!-- الخريطة التفاعلية -->
+        <section id="map-section" class="scroll-mt-24 space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <div class="text-orange-400 text-xs font-bold tracking-widest mb-2" data-i18n="mapEyebrow">اكتشف بالقرب منك</div>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white" data-i18n="mapTitle">الخريطة التفاعلية</h2>
+                    <p class="text-slate-400 mt-2" data-i18n="mapSub">اعرض موقعك وأقرب الأنشطة المنشورة.</p>
+                </div>
+                <button type="button" id="dir-locate" class="inline-flex items-center justify-center gap-2 border border-orange-400/30 bg-orange-400/10 hover:bg-orange-400/15 text-orange-200 rounded-xl px-4 py-3 text-sm font-bold transition" data-i18n="mapLocate">تحديد موقعي</button>
+            </div>
+            <div class="bg-panel border border-line rounded-3xl p-2 sm:p-3 shadow-2xl">
+                <div class="flex items-center justify-between gap-3 px-2 py-2 mb-2 text-sm text-slate-300">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-orange-400" aria-hidden="true"></span><span data-i18n="mapLegend">أنشطة منشورة</span></span>
+                    <span class="text-xs text-slate-400">OpenStreetMap</span>
+                </div>
+                <div id="dir-map" role="application" aria-label="خريطة الأنشطة" class="w-full h-[360px] sm:h-[460px] rounded-2xl bg-[#142238]"></div>
+            </div>
+            <p id="dir-map-status" class="text-xs text-slate-400" aria-live="polite"></p>
+        </section>
+
+        <!-- نموذج طلب النجدة -->
+        <section id="emergency" class="max-w-2xl mx-auto w-full bg-panel border border-line rounded-2xl p-6 shadow-glow scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-2 text-accent" data-i18n="formTitle">طلب نجدة طارئة</h2>
+            <p class="text-sm text-slate-400 mb-6" data-i18n="formIntro">املأ الحقول التالية لتجهيز رسالة جاهزة. ملاحظة: الضغط على الزر يفتح تطبيق واتساب برسالة مُجهزة، ولا يُرسل الطلب تلقائياً إلا بعد ضغط زر "إرسال" داخل واتساب.</p>
+
+            <form id="emergency-form" class="space-y-5" novalidate>
+
+                <div>
+                    <label for="emergency-name" class="block mb-1 text-sm"><span data-i18n="lName">الاسم الكامل</span> <span class="text-red-400">*</span></label>
+                    <input type="text" id="emergency-name" autocomplete="name" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none" />
+                </div>
+
+                <div>
+                    <label for="emergency-phone" class="block mb-1 text-sm"><span data-i18n="lPhone">رقم هاتفك للتواصل</span> <span class="text-red-400">*</span></label>
+                    <input type="tel" id="emergency-phone" inputmode="tel" autocomplete="tel" aria-describedby="phone-preview" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none" dir="ltr" />
+                    <p id="phone-preview" class="text-xs text-slate-400 mt-1 min-h-[1rem]" dir="ltr" aria-live="polite"></p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="emergency-vehicle" class="block mb-1 text-sm"><span data-i18n="lVehicle">نوع السيارة</span> <span class="text-red-400">*</span></label>
+                        <select id="emergency-vehicle" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none">
+                            <option value="" data-i18n="choose">-- اختر --</option>
+                            <option value="vFuel" data-i18n="vFuel">بنزين / ديزل</option>
+                            <option value="vHybrid" data-i18n="vHybrid">هجينة (هايبرد)</option>
+                            <option value="vEv" data-i18n="vEv">كهربائية (مثل BYD)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="emergency-brand" class="block mb-1 text-sm" data-i18n="lBrand">الماركة والموديل (اختياري)</label>
+                        <input type="text" id="emergency-brand" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none" />
+                    </div>
+                </div>
+                <div id="fuel-wrap" class="hidden">
+                    <label for="emergency-fuel" class="block mb-1 text-sm"><span data-i18n="lFuelKind">نوع الوقود</span> <span class="text-red-400">*</span></label>
+                    <select id="emergency-fuel" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none"></select>
+                </div>
+                <div id="ev-safety" class="hidden text-xs leading-relaxed bg-red-950 border border-red-700 rounded p-3 text-red-200" data-i18n="evSafety">تنبيه السلامة: إذا رأيت دخانًا أو شررًا أو تسربًا أو رائحة غريبة، ابتعد عن السيارة فورًا واتصل بالطوارئ. لا تلمس الكابلات البرتقالية أو الأجزاء المكشوفة.</div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="emergency-gov" class="block mb-1 text-sm"><span data-i18n="lGov">المحافظة</span> <span class="text-red-400">*</span></label>
+                        <select id="emergency-gov" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none"></select>
+                    </div>
+                    <div>
+                        <label for="emergency-type" class="block mb-1 text-sm"><span data-i18n="lType">نوع الطارئ</span> <span class="text-red-400">*</span></label>
+                        <select id="emergency-type" disabled class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none"></select>
+                    </div>
+                </div>
+
+                <!-- أسئلة تظهر حسب نوع الطارئ -->
+                <div id="dynamic-questions" class="space-y-4"></div>
+                <div id="injury-alert" class="hidden text-sm font-bold bg-red-950 border border-red-700 rounded p-3 text-red-200" role="alert" data-i18n="injuryAlert"></div>
+
+                <div>
+                    <label for="emergency-tow" class="block mb-1 text-sm"><span data-i18n="lTow">هل تحتاج سحب السيارة؟</span> <span class="text-red-400">*</span></label>
+                    <select id="emergency-tow" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none">
+                        <option value="" data-i18n="choose">-- اختر --</option>
+                        <option value="tow_none" data-i18n="tow_none">لا، لا أحتاج سحبًا</option>
+                        <option value="tow_flatbed" data-i18n="tow_flatbed">نعم، سيارة سحب مخصصة (شاحنة)</option>
+                        <option value="tow_rope" data-i18n="tow_rope">نعم، سحب بسيارة عادية من الخلف</option>
+                        <option value="tow_unknown" data-i18n="tow_unknown">لست متأكدًا</option>
+                    </select>
+                </div>
+
+                <p id="ev-tow-warn" class="hidden text-xs text-accent leading-relaxed -mt-2" data-i18n="evTowWarn">تنبيه: السيارات الكهربائية تحتاج غالبًا شاحنة سحب (عجلات مرفوعة). السحب من الخلف قد يضر نظامها، فاختر شاحنة السحب إن أمكن.</p>
+
+                <div class="space-y-3 border border-line rounded-lg p-4">
+                    <p class="text-sm font-bold" data-i18n="lLoc">موقعك</p>
+                    <button type="button" id="loc-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded transition disabled:opacity-60 disabled:cursor-wait" data-i18n="locBtn">حدّد موقعي تلقائيًا</button>
+                    <p id="loc-msg" class="text-xs text-slate-400 min-h-[1.25rem]" aria-live="polite"></p>
+                    <p id="map-status" class="text-xs text-accent min-h-[1rem]" aria-live="polite"></p>
+                    <div id="map" class="hidden" aria-label="Map" role="region"></div>
+                    <div id="coords-wrap" class="hidden text-xs text-slate-400 flex flex-wrap gap-3 items-center">
+                        <span dir="ltr" id="coords"></span>
+                        <a id="coords-link" href="#" target="_blank" rel="noopener noreferrer" class="underline hover:text-accent" data-i18n="openInMaps">فتح في خرائط Google</a>
+                    </div>
+                    <div>
+                        <label for="emergency-landmark" class="block mb-1 text-sm" data-i18n="lLandmark">العنوان أو أقرب نقطة دالة</label>
+                        <input type="text" id="emergency-landmark" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none" />
+                    </div>
+                </div>
+
+                <div>
+                    <label for="emergency-desc" class="block mb-1 text-sm" data-i18n="lDesc">تفاصيل إضافية</label>
+                    <textarea id="emergency-desc" rows="3" maxlength="500" class="w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none"></textarea>
+                </div>
+
+                <div class="flex items-start gap-2">
+                    <input type="checkbox" id="emergency-consent" class="w-4 h-4 mt-1 accent-accent" />
+                    <label for="emergency-consent" class="text-sm cursor-pointer leading-relaxed">
+                        <span data-i18n="lConsent">أوافق على إرسال بياناتي (الاسم والهاتف والموقع) إلى رقم المساعدة المعرّف لتواصل معي بخصوص هذه الحالة.</span> <span class="text-red-400">*</span>
+                    </label>
+                </div>
+
+                <p id="form-status" class="text-sm min-h-[1.5rem]" aria-live="polite"></p>
+
+                <button type="submit" id="submit-btn" class="w-full bg-accent text-ink font-bold py-3 rounded hover:bg-orange-600 transition disabled:opacity-60 disabled:cursor-wait" data-i18n="submit">إرسال الطلب عبر واتساب</button>
+
+                <p class="text-xs text-slate-400 leading-relaxed" data-i18n="privacy">تُجهز رسالة الطلب محلياً وتُفتح في تطبيق واتساب، ولا تُحفظ في أي خادم أو قاعدة بيانات. لا تصل الرسالة للطرف الآخر إلا بعد الضغط على زر "إرسال" داخل واتساب.</p>
+            </form>
+        </section>
+
+        <!-- زر الإبلاغ عن مشكلة فنية للمطور -->
+        <section class="bg-panel border border-line rounded-xl p-4 text-center space-y-2">
+            <p class="text-xs text-slate-400" data-i18n="bugIntro">هل واجهتك مشكلة أو عطل تقني في الموقع؟ أبلغنا فوراً:</p>
+            <button type="button" id="report-bug-btn" class="text-xs border border-accent text-accent hover:bg-accent hover:text-ink font-bold px-4 py-2 rounded transition" data-i18n="bugBtn">🛠️ إبلاغ المطور عن مشكلة تقنية</button>
+            <p id="bug-status" class="text-xs text-slate-400 min-h-[1rem]" aria-live="polite"></p>
+        </section>
+
+        <!-- كيف تعمل المنصة -->
+        <section id="how" class="scroll-mt-24 space-y-8">
+            <div class="text-center max-w-2xl mx-auto">
+                <div class="text-orange-400 text-xs font-bold tracking-widest mb-2" data-i18n="howEyebrow">خطوات بسيطة</div>
+                <h2 class="text-3xl sm:text-4xl font-black text-white" data-i18n="howTitle">كيف تستخدم AutoSphere؟</h2>
+                <p class="text-slate-400 mt-3" data-i18n="howSub">من البحث إلى التواصل، صممنا التجربة لتكون واضحة وسريعة.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="card-lift bg-panel border border-line rounded-2xl p-6"><div class="w-12 h-12 rounded-2xl bg-orange-500/15 text-orange-300 grid place-items-center text-xl font-black">1</div><h3 class="text-white font-extrabold text-lg mt-5" data-i18n="step1T">ابحث عن الخدمة</h3><p class="text-slate-400 text-sm leading-7 mt-2" data-i18n="step1">اكتب نوع الخدمة التي تحتاجها.</p></div>
+                <div class="card-lift bg-panel border border-line rounded-2xl p-6"><div class="w-12 h-12 rounded-2xl bg-orange-500/15 text-orange-300 grid place-items-center text-xl font-black">2</div><h3 class="text-white font-extrabold text-lg mt-5" data-i18n="step2T">اختر النشاط</h3><p class="text-slate-400 text-sm leading-7 mt-2" data-i18n="step2">راجع معلومات النشاط وموقعه، ثم تواصل معه مباشرة.</p></div>
+                <div class="card-lift bg-panel border border-line rounded-2xl p-6"><div class="w-12 h-12 rounded-2xl bg-orange-500/15 text-orange-300 grid place-items-center text-xl font-black">3</div><h3 class="text-white font-extrabold text-lg mt-5" data-i18n="step3T">اطلب المساعدة</h3><p class="text-slate-400 text-sm leading-7 mt-2" data-i18n="step3">في الحالات العاجلة اضغط «ألحقني» وجهّز طلبك عبر واتساب.</p></div>
+            </div>
+        </section>
+
+        <!-- تثبيت الصفحة كتطبيق ويب -->
+        <section id="install" class="scroll-mt-6 space-y-3 text-sm">
+            <h2 class="text-xl font-bold" data-i18n="installTitle">تثبيت الصفحة على الهاتف</h2>
+            <p class="text-slate-400" data-i18n="installAndroid"></p>
+            <p class="text-slate-400" data-i18n="installIos"></p>
+            <p class="text-xs text-slate-400" data-i18n="installNote"></p>
+        </section>
+
+        <!-- دعوة للطوارئ -->
+        <section class="relative overflow-hidden rounded-[28px] bg-gradient-to-l from-orange-600 to-orange-500 p-7 sm:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-glow">
+            <div class="absolute -left-12 -bottom-24 w-64 h-64 rounded-full border-[35px] border-white/10" aria-hidden="true"></div>
+            <div class="relative">
+                <div class="text-orange-100/80 text-xs font-bold mb-2" data-i18n="ctaEye">تعطلت سيارتك على الطريق؟</div>
+                <h2 class="text-2xl sm:text-3xl font-black text-white" data-i18n="ctaTitle">لا تبقَ وحدك في الطريق.</h2>
+                <p class="text-orange-50/80 mt-2" data-i18n="ctaText">أرسل تفاصيل المشكلة وموقعك إلى جهة المساعدة عبر واتساب.</p>
+            </div>
+            <a href="#emergency" class="relative shrink-0 rounded-xl bg-white text-orange-600 hover:bg-orange-50 px-6 py-3.5 font-black transition text-center" data-i18n="ctaBtn">🆘 ألحقني الآن</a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-16 border-t border-white/5 bg-ink py-8 px-4 text-sm text-slate-400">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+            <div>© <span id="year"></span> AutoSphere Global. <span data-i18n="rights">جميع الحقوق محفوظة</span></div>
+            <nav class="flex flex-wrap items-center gap-4">
+                <a href="#directory" class="hover:text-orange-300" data-i18n="navDir">دليل الخدمات</a>
+                <a href="#map-section" class="hover:text-orange-300" data-i18n="navMap">الخريطة</a>
+                <a href="#emergency" class="hover:text-orange-300" data-i18n="navEmergency">الطوارئ</a>
+                <button type="button" id="open-guide-btn" class="hover:text-orange-300" data-i18n="helpBtn">❓ دليل الاستخدام</button>
+            </nav>
+        </div>
+        <div class="max-w-7xl mx-auto mt-6 space-y-3 text-center">
+            <div id="owner-contact" class="hidden space-y-2">
+                <p class="text-xs text-slate-300 font-bold" data-i18n="ownerTitle">تواصل مع صاحب المنصة</p>
+                <div id="owner-contact-buttons" class="flex flex-wrap justify-center gap-2"></div>
+            </div>
+            <p class="text-xs" data-i18n="disclaimer">هذه الصفحة لا تغني عن الاتصال بالطوارئ الرسمية في الحالات الخطرة.</p>
+            <p class="text-xs leading-relaxed" data-i18n="guideDisclaimer"></p>
+            <p class="text-xs leading-relaxed text-slate-400" data-i18n="privacyNote"></p>
+            <p id="demo-notice" class="hidden text-xs text-amber-300" data-i18n="demoNotice"></p>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="js/phone.js"></script>
+    <script src="js/money.js"></script>
+
+    <!-- JavaScript Logic -->
+    <script>
+    (() => {
+        'use strict';
+
+        const CONFIG = {
+            developerWhatsApp: '', // إعداد منفصل لرقم المطور
+            emergencyWhatsApp: '', // ضع رقم واتساب الطوارئ الحقيقي بصيغة 964XXXXXXXXXX. الفارغ يعطّل الإرسال ولا يظهر أي رقم وهمي.
+            emergencyCall: '', // تركت فارغة لعدم وجود رقم رسمي موثوق مُحقق منه مسبقاً
+            // رقم واتساب الإدارة: تُرسل إليه طلبات تسجيل الأنشطة. المستخدم يضغط «إرسال» بنفسه.
+            adminWhatsApp: '',
+            // بيانات صاحب المنصة لأسفل الصفحة. الحقل الفارغ لا يظهر. الروابط كاملة وتبدأ بـ https://
+            owner: { personalPhone: '', whatsapp: '', facebook: '', instagram: '', tiktok: '' },
+            // الأنشطة المسجّلة. تُضاف يدوياً بعد التحقق من صاحب النشاط. لا تضع هنا بيانات وهمية.
+            // مثال الشكل: { name, category: 'wash'|'fuel'|'repair'|'body'|'tires'|'oil'|'electric'|'fire'|'tow'|'other', governorate: 'بغداد', area: '', personalPhone: '', whatsapp: '', facebook: '', instagram: '', tiktok: '', hours: '', description: '' }
+            providers: [],
+            // services: قائمة مفاتيح من SERVICE_TYPES. أضف محطة بنسخ كائن كامل.
+            // لا توجد مراكز موثقة بعد، فلا تُعرض أي بيانات وهمية.
+            // مثال الشكل: { name, governorate: 'بغداد', services: ['tow','fuel'], whatsapp: '964XXXXXXXXXX', phone: '', priceAmount: null }
+            centers: [],
+        };
+
+        // أنواع الخدمات: المفتاح => مفتاح الترجمة. لإضافة نوع جديد أضفه هنا وفي الترجمات الثلاث.
+        const SERVICE_TYPES = {
+            tow: 'svcTow',
+            fuel: 'svcFuel',
+            petrol: 'svcPetrol',
+            diesel: 'svcDiesel',
+            gas: 'svcGas',
+            ev: 'svcEv'
+        };
+
+        // الدوال الموحدة للأرقام موجودة في js/phone.js (مصدر واحد للتحقق والتطبيع والعرض)
+        const Phone = window.AutoSpherePhone;
+        const normalizeIraqiMobile = Phone.normalizeMobile;
+        const getUsablePhone = Phone.usableMobile;
+        const isDemoNumber = Phone.isDemoMobile;
+        const isValidShortEmergency = Phone.usableShort;
+        const formatDisplayPhone = raw => Phone.formatLocalDisplay(raw) || '';
+        const formatCurrency = window.AutoSphereMoney.formatCurrency;
+
+        // تحذيرات الإعدادات في console للمطور فقط، ولا تظهر للزوار
+        function auditConfiguration() {
+            const warn = m => console.warn('[AutoSphere Dev Audit] ' + m);
+            if (!getUsablePhone(CONFIG.emergencyWhatsApp)) warn('emergencyWhatsApp: missing, invalid, or demo number. Emergency WhatsApp requests are disabled.');
+            if (!getUsablePhone(CONFIG.emergencyCall) && !isValidShortEmergency(CONFIG.emergencyCall)) warn('emergencyCall: missing or invalid. The emergency call button is disabled.');
+            if (!getUsablePhone(CONFIG.developerWhatsApp)) warn('developerWhatsApp: not configured. Bug reporting is disabled.');
+            if (!getUsablePhone(CONFIG.adminWhatsApp)) warn('adminWhatsApp: missing, invalid, or demo. Provider registration is disabled.');
+            if (!CONFIG.providers.length) warn('providers: empty. The provider directory shows its empty state until real entries are added.');
+            CONFIG.centers.forEach((c, i) => {
+                if (!getUsablePhone(c.whatsapp)) warn(`center #${i + 1} "${c.name}": WhatsApp number missing, invalid, or demo.`);
+                if (!getUsablePhone(c.phone)) warn(`center #${i + 1} "${c.name}": call number missing, invalid, or demo.`);
+            });
+        }
+        auditConfiguration();
+
+
+        const GOVS = {
+            'بغداد': { ar: 'بغداد', en: 'Baghdad', ku: 'بەغدا' },
+            'البصرة': { ar: 'البصرة', en: 'Basra', ku: 'بەسرە' },
+            'نينوى': { ar: 'نينوى', en: 'Nineveh', ku: 'نینەوا' },
+            'أربيل': { ar: 'أربيل', en: 'Erbil', ku: 'هەولێر' },
+            'السليمانية': { ar: 'السليمانية', en: 'Sulaymaniyah', ku: 'سلێمانی' },
+            'دهوك': { ar: 'دهوك', en: 'Duhok', ku: 'دهۆک' },
+            'كركوك': { ar: 'كركوك', en: 'Kirkuk', ku: 'کەرکووک' },
+            'صلاح الدين': { ar: 'صلاح الدين', en: 'Saladin', ku: 'سەلاحەدین' },
+            'ديالى': { ar: 'ديالى', en: 'Diyala', ku: 'دیالە' },
+            'الأنبار': { ar: 'الأنبار', en: 'Anbar', ku: 'ئەنبار' },
+            'بابل': { ar: 'بابل', en: 'Babylon', ku: 'بابل' },
+            'كربلاء': { ar: 'كربلاء', en: 'Karbala', ku: 'کەربەلا' },
+            'النجف': { ar: 'النجف', en: 'Najaf', ku: 'نەجەف' },
+            'واسط': { ar: 'واسط', en: 'Wasit', ku: 'واسیت' },
+            'ذي قار': { ar: 'ذي قار', en: 'Dhi Qar', ku: 'زیقار' },
+            'ميسان': { ar: 'ميسان', en: 'Maysan', ku: 'میسان' },
+            'المثنى': { ar: 'المثنى', en: 'Muthanna', ku: 'موسەنا' },
+            'القادسية': { ar: 'القادسية', en: 'Al-Qadisiyyah', ku: 'قادسیە' }
+        };
+
+        const I18N = {
+            ar: {
+                pageTitle: 'AutoSphere Global - خدمات السيارات في العراق',
+                metaDesc: 'AutoSphere Global - دليلك لخدمات السيارات في العراق: صيانة، مساعدة على الطرق، وطلب نجدة طارئة.',
+                langLabel: 'اللغة',
+                navServices: 'الخدمات', navCenters: 'المراكز', navEmergency: 'الطوارئ',
+                heroTitle: 'سيارتك تحتاج عناية؟',
+                heroText: 'اكتشف ورش الصيانة ومحطات الوقود وخدمات الإطارات بالقرب منك، أو اطلب المساعدة عند الطوارئ بخطوات بسيطة.',
+                callEmergency: 'اتصال بالطوارئ', requestHelp: 'أرسل طلب نجدة',
+                formTitle: 'طلب نجدة طارئة',
+                formIntro: 'املأ الحقول التالية لتجهيز رسالة جاهزة. ملاحظة: الضغط على الزر يفتح تطبيق واتساب برسالة مُجهزة، ولا يُرسل الطلب تلقائياً إلا بعد ضغط زر "إرسال" داخل واتساب.',
+                lName: 'الاسم الكامل', lPhone: 'رقم هاتفك للتواصل', lGov: 'المحافظة', lType: 'نوع الطارئ',
+                lTow: 'هل تحتاج سحب السيارة؟', lLoc: 'موقعك', lLandmark: 'العنوان أو أقرب نقطة دالة',
+                lDesc: 'تفاصيل إضافية',
+                lConsent: 'أوافق على إرسال بياناتي (الاسم والهاتف والموقع) إلى رقم المساعدة المعرّف لتواصل معي بخصوص هذه الحالة.',
+                choose: '-- اختر --',
+                lVehicle: 'نوع السيارة', vFuel: 'تعمل بالوقود فقط', vHybrid: 'هايبرد (بنزين + بطارية)', vEv: 'تعمل بالبطارية فقط (كهربائية)',
+                lBrand: 'الماركة والموديل (اختياري)',
+                phPhone: '07xxxxxxxxx', phBrand: 'مثال: BYD Atto 3 2023', phLandmark: 'مثال: قرب جسر المدينة، الطريق السريع', phDesc: 'صف الحالة باختصار...',
+                evTowWarn: 'تنبيه: السيارات الكهربائية تحتاج غالبًا شاحنة سحب (عجلات مرفوعة). السحب من الخلف قد يضر نظامها، فاختر شاحنة السحب إن أمكن.',
+                evSafety: 'تنبيه السلامة: إذا رأيت دخانًا أو شررًا أو تسربًا أو رائحة غريبة، ابتعد عن السيارة فورًا واتصل بالطوارئ. لا تلمس الكابلات البرتقالية أو الأجزاء المكشوفة.',
+                type_fuel_delivery: 'أحتاج توصيل وقود إلى مكاني',
+                type_ev_battery: 'البطارية نفدت أو لا تكفي للوصول',
+                type_ev_charge: 'عطل في الشحن أو محطة الشحن معطلة',
+                type_ev_warning: 'تحذير أو عطل في النظام الكهربائي',
+                type_mechanical: 'عطل ميكانيكي مفاجئ', type_fuel: 'نفاد الوقود / بطارية فارغة',
+                type_tire: 'إطار مثقوب', type_accident: 'حادث مروري', type_other: 'أخرى',
+                tow_none: 'لا، لا أحتاج سحبًا', tow_flatbed: 'نعم، سيارة سحب مخصصة (شاحنة)',
+                tow_rope: 'نعم، سحب بسيارة عادية من الخلف', tow_unknown: 'لست متأكدًا',
+                locBtn: 'حدّد موقعي تلقائيًا',
+                locNone: 'لم يُحدَّد موقع بعد.',
+                locSearching: 'جاري تحديد موقعك بدقة...',
+                locGood: 'دقة جيدة: ±{n} م.',
+                locMid: 'دقة متوسطة: ±{n} م. تأكد أن النقطة على موقعك.',
+                locLow: 'دقة منخفضة: ±{n} م. اسحب النقطة إلى مكانك الصحيح على الخريطة.',
+                locAdjusted: 'تم تعديل النقطة يدويًا على الخريطة.',
+                locDenied: 'لم يُسمح بالوصول إلى الموقع. فعّله من إعدادات المتصفح أو الهاتف، أو اكتب العنوان يدويًا.',
+                locFail: 'تعذر تحديد الموقع. تأكد أن GPS مفعّل، أو اكتب العنوان يدويًا.',
+                locUnsupported: 'جهازك لا يدعم تحديد الموقع. اكتب العنوان يدويًا.',
+                mapFallback: 'الخريطة أو بلاطاتها غير متاحة حالياً. يمكنك الاعتماد على الإحداثيات والعنوان اليدوي أدناه.',
+                openInMaps: 'فتح في خرائط Google',
+                errName: 'الرجاء كتابة الاسم الكامل.',
+                errPhone: 'رقم الهاتف غير صحيح. مثال: 07801234567',
+                errGov: 'اختر المحافظة.', errType: 'اختر نوع الطارئ.', errTow: 'اختر إن كنت تحتاج سحب السيارة.',
+                errConsent: 'يجب الموافقة على إرسال بياناتك للتواصل معك.',
+                errLocation: 'حدّد موقعك على الخريطة، أو اكتب العنوان أو أقرب نقطة دالة.',
+                errNoTarget: 'رقم استقبال الطلبات غير مُعد أو افتراضي. الرجاء التواصل مع الإدارة لضبط الأرقام الحقيقية.',
+                errGeneric: 'حدث خطأ أثناء تجهيز الطلب. حاول مرة أخرى.',
+                sending: 'جاري تجهيز الطلب...',
+                sentOk: 'تم تجهيز الرسالة وفتح واتساب. الطلب لا يُعد مُرسلاً إلا بعد الضغط على زر "إرسال" داخل واتساب.',
+                guideDisclaimer: 'هذه الصفحة واجهة تواصل وليست خدمة طوارئ رسمية، ولا تضمن وصول مساعدة في الوقت المناسب. في الخطر المباشر اتصل بالجهات الرسمية.',
+                demoNotice: 'تنبيه: الأرقام المعروضة في هذه النسخة تجريبية، ولا تُستخدم للتواصل الفعلي قبل ضبط الأرقام الحقيقية.',
+                demoBadge: 'بيانات تجريبية',
+                installTitle: 'تثبيت الصفحة على الهاتف',
+                installAndroid: 'أندرويد (Chrome): من القائمة ⋮ اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".',
+                installIos: 'آيفون (Safari فقط): اضغط زر المشاركة ثم "إضافة إلى الشاشة الرئيسية".',
+                installNote: 'التثبيت يعمل كاختصار للصفحة. تحديد الموقع وفتح واتساب يحتاجان إلى أذونات المتصفح والجهاز. لم يُختبر على كل الأجهزة.',
+                phoneLocalLabel: 'الصيغة المحلية:',
+                mapLibFail: 'تعذر تحميل مكتبة الخريطة. الإحداثيات أدناه ستُرسل، ويمكنك كتابة العنوان يدوياً.',
+                mapTileError: 'تعذر تحميل صور الخريطة (الإنترنت أو الخدمة غير متاحة). الإحداثيات ما زالت صالحة، ويمكنك كتابة العنوان يدوياً.',
+                mapInitError: 'حدث خطأ في إنشاء الخريطة. الإحداثيات ما زالت صالحة، ويمكنك كتابة العنوان يدوياً.',
+                bugOpened: 'تم فتح واتساب لإرسال البلاغ للمطور. الإرسال يتم من داخل واتساب.',
+                bugNoPopup: 'منع المتصفح فتح النافذة. لا يمكن إرسال البلاغ الآن.',
+                errVehicle: 'اختر نوع السيارة.',
+                errFuel: 'اختر نوع الوقود.',
+                lFuelKind: 'نوع الوقود',
+                fuelPetrol: 'بنزين',
+                fuelDiesel: 'ديزل',
+                fuelGas: 'غاز (CNG / LPG)',
+                type_hybrid_battery: 'تحذير في بطارية الهايبرد أو توقف النظام',
+                chooseVehicleFirst: '-- اختر نوع السيارة أولاً --',
+                errQuestion: 'أجب عن جميع الأسئلة الظاهرة تحت نوع الطارئ.',
+                injuryAlert: 'إذا كان هناك مصابون، اتصل بالإسعاف والطوارئ فورًا قبل أي شيء آخر.',
+                qSpare: 'هل لديك إطار احتياطي؟',
+                qTirePos: 'أي إطار مثقوب؟',
+                qRoadSafe: 'هل السيارة في مكان آمن بعيدًا عن حركة السير؟',
+                qFuelProblem: 'ما المشكلة بالضبط؟',
+                qFuelAmount: 'كمية الوقود المطلوبة',
+                qStart: 'هل تشتغل السيارة؟',
+                qWarningLight: 'هل ظهرت إضاءة تحذير على لوحة القيادة؟',
+                qInjury: 'هل يوجد مصابون؟',
+                qBlock: 'هل السيارة تعيق حركة الطريق؟',
+                qCharge: 'نسبة الشحن التقريبية',
+                qChargerType: 'أين تشحن السيارة عادةً؟',
+                qChargeFault: 'ماذا يحدث عند توصيل الشاحن؟',
+                qEvMsg: 'ما الرسالة أو التحذير الذي يظهر؟',
+                qEvMoving: 'هل تتحرك السيارة؟',
+                qHybShow: 'ما الذي يحدث في السيارة؟',
+                optYes: 'نعم',
+                optNo: 'لا',
+                optUnknown: 'لست متأكدًا',
+                posFL: 'أمامي يسار',
+                posFR: 'أمامي يمين',
+                posRL: 'خلفي يسار',
+                posRR: 'خلفي يمين',
+                probOut: 'نفد الوقود',
+                probBatt: 'البطارية فارغة',
+                amt10: 'حوالي 10 لتر',
+                amt20: '20 لتر',
+                amt40: '40 لتر أو أكثر',
+                chg10: 'أقل من 10%',
+                chg25: 'من 10% إلى 25%',
+                chg99: 'أكثر من 25%',
+                chHome: 'شاحن منزلي',
+                chPublic: 'محطة شحن عامة',
+                chMobile: 'شاحن متنقل',
+                cfNoStart: 'لا تبدأ عملية الشحن',
+                cfStops: 'يتوقف الشحن فجأة',
+                cfError: 'تظهر رسالة خطأ',
+                evPower: 'تحذير في النظام الكهربائي',
+                evTemp: 'ارتفاع حرارة البطارية',
+                evInsul: 'تحذير عزل أو تسرب',
+                evOther: 'رسالة أخرى',
+                hybWarn: 'تحذير على الشاشة',
+                hybPower: 'ضعف في القدرة أو السرعة',
+                hybStop: 'توقفت السيارة',
+                popupBlocked: 'منع المتصفح فتح النافذة. استخدم الرابط أدناه لإرسال الطلب.',
+                openWA: 'افتح واتساب من هنا',
+                liveHint: 'مهم: داخل واتساب اضغط 📎 ثم "الموقع" ثم "مشاركة الموقع المباشر" ليصل موقعك للمركز باستمرار.',
+                submit: 'إرسال الطلب عبر واتساب',
+                privacy: 'تُجهز رسالة الطلب محلياً وتُفتح في تطبيق واتساب، ولا تُحفظ في أي خادم أو قاعدة بيانات. لا تصل الرسالة للطرف الآخر إلا بعد الضغط على زر "إرسال" داخل واتساب.',
+                servicesTitle: 'خدماتنا',
+                svc1Title: 'صيانة السيارات', svc1Text: 'التواصل مع مراكز صيانة في محافظتك.',
+                svc2Title: 'المساعدة على الطرق', svc2Text: 'طلب مساعدة فورية عند تعطل السيارة أو نفاد الوقود.',
+                svc3Title: 'السحب والنقل', svc3Text: 'نقل السيارة إلى أقرب مركز صيانة.',
+                svc4Title: 'طلب النجدة', svc4Text: 'أرسل تفاصيل حالتك والموقع بخطوات قليلة.',
+                centersTitle: 'مراكز الصيانة المتعاونة',
+                allGovs: 'كل المحافظات',
+                allServices: 'كل الخدمات',
+                submitUnavailable: 'خدمة الإرسال عبر واتساب غير متاحة حالياً. في الحالات الطارئة اتصل بالجهات الرسمية مباشرة.', msgNone: 'غير مذكور', msgNoDesc: 'لا توجد', msgLocNotSet: 'لم يُحدَّد على الخريطة', msgLocManual: 'نقطة معدّلة يدويًا', msgLocAuto: 'تحديد تلقائي من الجهاز', msgAccuracy: 'الدقة ±{n} م', msgCoords: 'الإحداثيات', msgMapLink: 'الخريطة', svcTow: 'سحب وطرقيات', svcFuel: 'وقود', svcPetrol: 'بنزين', svcDiesel: 'ديزل', svcGas: 'غاز (CNG / LPG)', svcEv: 'شحن البطاريات',
+                noCenters: 'لا توجد مراكز متاحة في هذه المحافظة حالياً.',
+                waBtn: 'واتساب', callBtn: 'اتصال', invalidNumber: 'رقم غير مضبوط',
+                bugUnavailable: 'الإبلاغ عبر واتساب غير متاح حالياً لعدم توفر رقم مطور مضبوط.',
+                disclaimer: 'هذه الصفحة لا تغني عن الاتصال بالطوارئ الرسمية في الحالات الخطرة.',
+                rights: 'جميع الحقوق محفوظة',
+                privacyNote: 'لا نحفظ بيانات النماذج في الموقع. بيانات التسجيل والطوارئ تُرسل فقط عبر واتساب عندما تضغط «إرسال» بنفسك. الخطوط وTailwind وLeaflet تُحمّل من خوادم خارجية، والخرائط من OpenStreetMap.',
+                tagline: 'كل خدمات سيارتك في مكان واحد',
+                navDir: 'دليل الخدمات',
+                navMap: 'الخريطة',
+                navHow: 'كيف تعمل المنصة؟',
+                ctaHeader: 'ألحقني الآن',
+                heroTitle2: 'نحن نوصلك بالحل.',
+                heroSearchPh: 'ابحث عن ورشة، كهربائي، بنچر...',
+                allCities: 'كل المدن',
+                searchNow: 'ابحث الآن',
+                qLabel: 'الأكثر بحثاً:',
+                qBody: 'سمكري',
+                qEv: 'كهربائي سيارات',
+                qTires: 'إطارات',
+                exploreDir: 'استكشف الدليل',
+                needHelp: 'أحتاج مساعدة عاجلة',
+                ccLabel: 'مركز التحكم',
+                ccTitle: 'رحلتك أسهل معنا',
+                tile1: 'مراكز الصيانة',
+                tile1s: 'ورش وخبراء السيارات',
+                tile2: 'خريطة تفاعلية',
+                tile2s: 'اعثر على الأقرب إليك',
+                tile3: 'خدمات الطريق',
+                tile3s: 'إطارات وبطاريات وسحب',
+                tile4: 'ألحقني',
+                tile4s: 'اطلب النجدة بسرعة',
+                waRowT: 'تواصل مباشر عبر واتساب',
+                waRowS: 'استفسر عن الخدمة قبل التوجه',
+                waRowB: 'سهل وسريع',
+                st1: 'GPS',
+                st1s: 'مشاركة موقعك بإذنك',
+                st2: 'واتساب',
+                st2s: 'تواصل مباشر وسهل',
+                st3: '3 لغات',
+                st3s: 'العربية والإنجليزية والكردية',
+                st4: 'خريطة',
+                st4s: 'OpenStreetMap',
+                dirEyebrow: 'دليل الخدمات',
+                dirTitle: 'اعثر على الخدمة المناسبة',
+                dirSub: 'تصفح الفئات وابحث حسب المدينة أو نوع الخدمة.',
+                chipAll: 'الكل',
+                mapEyebrow: 'اكتشف بالقرب منك',
+                mapTitle: 'الخريطة التفاعلية',
+                mapSub: 'اعرض موقعك وأقرب الأنشطة المنشورة.',
+                mapLocate: 'تحديد موقعي',
+                mapLegend: 'أنشطة منشورة',
+                mapNoPins: 'لا توجد أنشطة بإحداثيات منشورة بعد.',
+                mapNoLeaflet: 'تعذر تحميل الخريطة. تحقق من الإنترنت ثم أعد التحميل.',
+                mapLocating: 'جارٍ تحديد موقعك...',
+                mapLocated: 'تم تحديد موقعك على الخريطة.',
+                mapDenied: 'لم تسمح بالوصول إلى موقعك.',
+                mapUnsupported: 'المتصفح لا يدعم تحديد الموقع.',
+                gateTitle: 'سجّل للدخول إلى الدليل',
+                gateText: 'التسجيل عبر واتساب فقط. لا يُحفظ اسمك ورقمك في الموقع، بل يُرسل الطلب إلى الإدارة. طلب النجدة متاح دائماً بدون تسجيل.',
+                gateName: 'اسمك',
+                gatePhone: 'رقم واتساب',
+                gateSend: 'سجّل عبر واتساب',
+                gateDone: 'أرسلت الرسالة، ادخل الآن',
+                gateEmergency: 'طلب نجدة بدون تسجيل',
+                gateNoAdmin: 'التسجيل غير متاح حالياً. يمكنك طلب النجدة مباشرة.',
+                gateInvalid: 'أدخل اسماً ورقم واتساب عراقياً صالحاً.',
+                gateOpened: 'تم فتح واتساب. أرسل الرسالة ثم اضغط الزر أدناه.',
+                gatePopup: 'اسمح بالنوافذ المنبثقة ثم أعد المحاولة.',
+                howEyebrow: 'خطوات بسيطة',
+                howTitle: 'كيف تستخدم AutoSphere؟',
+                howSub: 'من البحث إلى التواصل، صممنا التجربة لتكون واضحة وسريعة.',
+                step1T: 'ابحث عن الخدمة',
+                step1: 'اكتب نوع الخدمة التي تحتاجها وحدد المدينة أو استخدم الخريطة.',
+                step2T: 'اختر النشاط',
+                step2: 'راجع معلومات النشاط وموقعه، ثم تواصل معه مباشرة.',
+                step3T: 'اطلب المساعدة',
+                step3: 'في الحالات العاجلة اضغط «ألحقني» وجهّز طلبك عبر واتساب.',
+                ctaEye: 'تعطلت سيارتك على الطريق؟',
+                ctaTitle: 'لا تبقَ وحدك في الطريق.',
+                ctaText: 'أرسل تفاصيل المشكلة وموقعك إلى جهة المساعدة عبر واتساب.',
+                ctaBtn: '🆘 ألحقني الآن',
+                navProviders: 'الأنشطة', navRegister: 'سجّل نشاطك',
+                heroBadge: 'دليل خدمات السيارات في العراق',
+                providersTitle: 'أنشطة مسجّلة في الدليل',
+                providersIntro: 'تواصل مباشرة مع النشاط من الأزرار. كل نشاط أضافه صاحبه وتمت مراجعته.',
+                allCategories: 'كل الأنشطة',
+                noProviders: 'لا توجد أنشطة منشورة بعد. إذا كان لديك نشاط، سجّله في القسم أدناه.',
+                noContacts: 'لا توجد وسيلة تواصل منشورة لهذا النشاط بعد.',
+                regHoursLabel: 'ساعات العمل',
+                btnCall: 'اتصال', btnWhatsapp: 'واتساب', btnFacebook: 'فيسبوك', btnInstagram: 'إنستغرام', btnTiktok: 'تيك توك',
+                ownerTitle: 'تواصل مع صاحب المنصة',
+                regTitle: 'سجّل نشاطك في الدليل',
+                regIntro: 'أضف نشاطك ليراه الزبائن. لا يُحفظ التسجيل في الموقع؛ يُرسل طلبك إلى الإدارة عبر واتساب للمراجعة، ولا يُنشر النشاط إلا بعد التحقق.',
+                regName: 'اسم النشاط', regCategory: 'نوع النشاط', regGov: 'المحافظة', regArea: 'المنطقة أو أقرب نقطة',
+                regPersonal: 'رقمك الشخصي (للتواصل)', regWa: 'رقم واتساب النشاط (اختياري)',
+                regFb: 'رابط فيسبوك (اختياري)', regIg: 'رابط إنستغرام (اختياري)', regTt: 'رابط تيك توك (اختياري)',
+                regHours: 'ساعات العمل', regDesc: 'وصف مختصر',
+                regConsent: 'أؤكد أن المعلومات صحيحة، وأوافق على نشرها في الدليل بعد المراجعة.',
+                regSubmit: 'أرسل طلب التسجيل عبر واتساب',
+                regPrivacy: 'تُجهز الرسالة محلياً وتُفتح في واتساب، وتضغط أنت «إرسال» بنفسك.',
+                regMissing: 'أكمل الحقول المطلوبة (*) ووافق على الإقرار.',
+                regInvalidPhone: 'تحقق من الرقم. استخدم رقماً عراقياً صالحاً.',
+                regInvalidLink: 'تحقق من الروابط: يجب أن تبدأ بـ https:// وتكون من الموقع الصحيح.',
+                regNoAdmin: 'التسجيل غير مفعّل حالياً لأن رقم الإدارة غير مضبوط.',
+                regPopup: 'منع المتصفح فتح واتساب. اسمح بالنوافذ المنبثقة لهذا الموقع ثم أعد المحاولة.',
+                regOpened: 'تم فتح واتساب برسالة التسجيل. اضغط «إرسال» داخل واتساب لإكمال الطلب.',
+                helpBtn: '❓ دليل الاستخدام',
+                guideTitle: 'كيف تستخدم منصة AutoSphere الطارئة؟',
+                guideStep1: 'املأ حقول البيانات الشخصية ونوع السيارة بدقة.',
+                guideStep2: 'حدد موقعك التلقائي عبر زر GPS أو اكتب أقرب علامة دالة.',
+                guideStep3: 'اضغط على زر إرسال لتجهيز الرسالة وفتح تطبيق واتساب فوراً.',
+                guideStep4: 'اضغط على زر "إرسال" داخل واتساب لتصل رسالتك للمركز المختص.',
+                guideClose: 'فهمت، ابدأ الاستخدام',
+                bugIntro: 'هل واجهتك مشكلة أو عطل تقني في الموقع؟ أبلغنا فوراً:',
+                bugBtn: '🛠️ إبلاغ المطور عن مشكلة تقنية',
+                msgTitle: '🚨 طلب نجدة طارئة',
+                msgName: 'الاسم',
+                msgPhone: 'الهاتف',
+                msgGov: 'المحافظة',
+                msgVehicle: 'نوع السيارة',
+                msgType: 'نوع الطارئ',
+                msgTow: 'سحب السيارة',
+                msgLandmark: 'العنوان أو نقطة دالة',
+                msgDesc: 'التفاصيل',
+                msgLoc: 'الموقع'
+            },
+            en: {
+                pageTitle: 'AutoSphere Global - Car services in Iraq',
+                metaDesc: 'AutoSphere Global - your guide to car services in Iraq: maintenance, roadside assistance, and emergency requests.',
+                langLabel: 'Language',
+                navServices: 'Services', navCenters: 'Centers', navEmergency: 'Emergency',
+                heroTitle: 'Does your car need care?',
+                heroText: 'Find repair shops, fuel stations and tire services near you, or request emergency help in a few simple steps.',
+                callEmergency: 'Call emergency', requestHelp: 'Send a help request',
+                formTitle: 'Emergency help request',
+                formIntro: 'Fill in the fields below. WhatsApp will open with a ready message. The request is only sent after pressing "Send" inside WhatsApp.',
+                lName: 'Full name', lPhone: 'Your phone number', lGov: 'Governorate', lType: 'Type of emergency',
+                lTow: 'Do you need your car towed?', lLoc: 'Your location', lLandmark: 'Address or nearest landmark',
+                lDesc: 'More details',
+                lConsent: 'I agree to share my details (name, phone and location) with the configured assistance number so they can contact me.',
+                choose: '-- Choose --',
+                lVehicle: 'Vehicle type', vFuel: 'Fuel only (petrol / diesel / gas)', vHybrid: 'Hybrid (fuel + battery)', vEv: 'Battery only (electric)',
+                lBrand: 'Make and model (optional)',
+                phPhone: '07xxxxxxxxx', phBrand: 'e.g. BYD Atto 3 2023', phLandmark: 'e.g. near the city bridge, highway', phDesc: 'Briefly describe the situation...',
+                evTowWarn: 'Note: electric cars usually need a flatbed tow truck (wheels lifted). Towing from behind can damage the system, so choose a flatbed if possible.',
+                evSafety: 'Safety: if you see smoke, sparks, a leak or a strange smell, move away from the car immediately and call emergency services. Do not touch orange high-voltage cables or exposed parts.',
+                type_fuel_delivery: 'I need fuel delivered to my location',
+                type_ev_battery: 'Battery is empty or not enough to reach',
+                type_ev_charge: 'Charging fault or charging station is out of service',
+                type_ev_warning: 'Warning or fault in the electric system',
+                type_mechanical: 'Sudden mechanical fault', type_fuel: 'Out of fuel / flat battery',
+                type_tire: 'Flat tire', type_accident: 'Traffic accident', type_other: 'Other',
+                tow_none: 'No, I do not need towing', tow_flatbed: 'Yes, a dedicated tow truck (flatbed)',
+                tow_rope: 'Yes, towing with a regular car from behind', tow_unknown: 'Not sure',
+                locBtn: 'Detect my location automatically',
+                locNone: 'No location set yet.',
+                locSearching: 'Detecting your location accurately...',
+                locGood: 'Good accuracy: ±{n} m.',
+                locMid: 'Medium accuracy: ±{n} m. Make sure the pin is on your location.',
+                locLow: 'Low accuracy: ±{n} m. Drag the pin to your exact spot on the map.',
+                locAdjusted: 'Pin adjusted manually on the map.',
+                locDenied: 'Location access was not allowed. Enable it in your browser or phone settings, or type the address.',
+                locFail: 'Could not detect your location. Make sure GPS is on, or type the address.',
+                locUnsupported: 'Your device does not support location. Please type the address.',
+                mapFallback: 'Map or tiles are currently unavailable. You can rely on the coordinates and manual address input below.',
+                openInMaps: 'Open in Google Maps',
+                errName: 'Please enter your full name.',
+                errPhone: 'Invalid phone number. Example: 07801234567',
+                errGov: 'Choose a governorate.', errType: 'Choose the type of emergency.', errTow: 'Choose whether you need towing.',
+                errConsent: 'Please agree to share your details so we can contact you.',
+                errLocation: 'Set your location on the map, or type the address or nearest landmark.',
+                errNoTarget: 'The emergency number is not configured or is set to default. Please contact administration.',
+                errGeneric: 'Something went wrong while preparing the request. Please try again.',
+                sending: 'Preparing your request...',
+                sentOk: 'The message is prepared and WhatsApp was opened. The request is not sent until you press "Send" inside WhatsApp.',
+                guideDisclaimer: 'This page is a contact interface, not an official emergency service, and does not guarantee timely help. In immediate danger, call the official authorities.',
+                demoNotice: 'Notice: the numbers shown in this version are demo values and must not be used for real contact until real numbers are configured.',
+                demoBadge: 'Demo data',
+                installTitle: 'Install the page on your phone',
+                installAndroid: 'Android (Chrome): open the ⋮ menu and choose "Install app" or "Add to Home screen".',
+                installIos: 'iPhone (Safari only): tap Share, then "Add to Home Screen".',
+                installNote: 'Installing creates a shortcut to the page. Location and opening WhatsApp need browser and device permissions. Not tested on every device.',
+                phoneLocalLabel: 'Local format:',
+                mapLibFail: 'The map library failed to load. The coordinates below will be sent, and you can type the address manually.',
+                mapTileError: 'Map tiles failed to load (internet or service unavailable). The coordinates are still valid, and you can type the address manually.',
+                mapInitError: 'The map could not be created. The coordinates are still valid, and you can type the address manually.',
+                bugOpened: 'WhatsApp opened to send the report to the developer. The report is sent from inside WhatsApp.',
+                bugNoPopup: 'The browser blocked the window. The report cannot be sent right now.',
+                errVehicle: 'Choose the vehicle type.',
+                errFuel: 'Choose the fuel type.',
+                lFuelKind: 'Fuel type',
+                fuelPetrol: 'Petrol',
+                fuelDiesel: 'Diesel',
+                fuelGas: 'Gas (CNG / LPG)',
+                type_hybrid_battery: 'Hybrid battery warning or system shutdown',
+                chooseVehicleFirst: '-- Choose the vehicle type first --',
+                errQuestion: 'Please answer all the questions shown under the type of emergency.',
+                injuryAlert: 'If anyone is injured, call an ambulance and emergency services immediately, before anything else.',
+                qSpare: 'Do you have a spare tire?',
+                qTirePos: 'Which tire is flat?',
+                qRoadSafe: 'Is the car in a safe place away from traffic?',
+                qFuelProblem: 'What exactly is the problem?',
+                qFuelAmount: 'Amount of fuel needed',
+                qStart: 'Does the car start?',
+                qWarningLight: 'Did a warning light appear on the dashboard?',
+                qInjury: 'Is anyone injured?',
+                qBlock: 'Is the car blocking traffic?',
+                qCharge: 'Approximate charge level',
+                qChargerType: 'Where do you usually charge the car?',
+                qChargeFault: 'What happens when you plug in the charger?',
+                qEvMsg: 'What message or warning is shown?',
+                qEvMoving: 'Can the car move?',
+                qHybShow: 'What is happening with the car?',
+                optYes: 'Yes',
+                optNo: 'No',
+                optUnknown: 'Not sure',
+                posFL: 'Front left',
+                posFR: 'Front right',
+                posRL: 'Rear left',
+                posRR: 'Rear right',
+                probOut: 'Out of fuel',
+                probBatt: 'Flat battery',
+                amt10: 'About 10 liters',
+                amt20: '20 liters',
+                amt40: '40 liters or more',
+                chg10: 'Less than 10%',
+                chg25: '10% to 25%',
+                chg99: 'More than 25%',
+                chHome: 'Home charger',
+                chPublic: 'Public charging station',
+                chMobile: 'Mobile charger',
+                cfNoStart: 'Charging does not start',
+                cfStops: 'Charging stops suddenly',
+                cfError: 'An error message appears',
+                evPower: 'Electric system warning',
+                evTemp: 'Battery overheating',
+                evInsul: 'Insulation or leak warning',
+                evOther: 'Another message',
+                hybWarn: 'Warning on screen',
+                hybPower: 'Loss of power or speed',
+                hybStop: 'The car stopped',
+                popupBlocked: 'Your browser blocked the new window. Use the link below to send the request.',
+                openWA: 'Open WhatsApp here',
+                liveHint: 'Important: in WhatsApp tap 📎, then "Location", then "Share live location" so the center can follow your position.',
+                submit: 'Send request via WhatsApp',
+                privacy: 'Your details are prepared locally and opened in WhatsApp. No data is stored on any server. The message is only sent after pressing "Send" inside WhatsApp.',
+                servicesTitle: 'Our services',
+                svc1Title: 'Car maintenance', svc1Text: 'Connect with maintenance centers in your governorate.',
+                svc2Title: 'Roadside assistance', svc2Text: 'Request immediate help if your car breaks down or runs out of fuel.',
+                svc3Title: 'Towing', svc3Text: 'Transport your car to the nearest maintenance center.',
+                svc4Title: 'Emergency request', svc4Text: 'Send your situation and location in a few steps.',
+                centersTitle: 'Partner maintenance centers',
+                allGovs: 'All Governorates',
+                allServices: 'All services',
+                submitUnavailable: 'WhatsApp requests are unavailable right now. In an emergency, call the official services directly.', msgNone: 'Not provided', msgNoDesc: 'None', msgLocNotSet: 'Not set on the map', msgLocManual: 'Manually adjusted point', msgLocAuto: 'Automatic device location', msgAccuracy: 'Accuracy ±{n} m', msgCoords: 'Coordinates', msgMapLink: 'Map', svcTow: 'Towing & roadside', svcFuel: 'Fuel', svcPetrol: 'Petrol', svcDiesel: 'Diesel', svcGas: 'Gas (CNG / LPG)', svcEv: 'EV battery charging',
+                noCenters: 'No centers available in this governorate currently.',
+                waBtn: 'WhatsApp', callBtn: 'Call', invalidNumber: 'Invalid number',
+                bugUnavailable: 'WhatsApp bug reporting is currently unavailable due to missing developer configuration.',
+                disclaimer: 'This page does not replace calling official emergency services in dangerous situations.',
+                rights: 'All rights reserved',
+                privacyNote: 'Form data is not stored on this site. Registration and emergency data are sent only through WhatsApp when you press "Send" yourself. Fonts, Tailwind and Leaflet load from external servers, and maps come from OpenStreetMap.',
+                tagline: 'All your car services in one place',
+                navDir: 'Service directory',
+                navMap: 'Map',
+                navHow: 'How it works',
+                ctaHeader: 'Help me now',
+                heroTitle2: 'We get you back on the road.',
+                heroSearchPh: 'Search for a workshop, EV electrician, puncture...',
+                allCities: 'All cities',
+                searchNow: 'Search',
+                qLabel: 'Popular:',
+                qBody: 'Body shop',
+                qEv: 'EV electrician',
+                qTires: 'Tires',
+                exploreDir: 'Explore the directory',
+                needHelp: 'I need urgent help',
+                ccLabel: 'Control center',
+                ccTitle: 'Your trip is easier with us',
+                tile1: 'Repair shops',
+                tile1s: 'Workshops and car experts',
+                tile2: 'Interactive map',
+                tile2s: 'Find the closest to you',
+                tile3: 'Roadside services',
+                tile3s: 'Tires, batteries and towing',
+                tile4: 'Help me',
+                tile4s: 'Request help quickly',
+                waRowT: 'Direct contact via WhatsApp',
+                waRowS: 'Ask about the service before you go',
+                waRowB: 'Easy and fast',
+                st1: 'GPS',
+                st1s: 'Share your location with permission',
+                st2: 'WhatsApp',
+                st2s: 'Direct, easy contact',
+                st3: '3 languages',
+                st3s: 'Arabic, English and Kurdish',
+                st4: 'Map',
+                st4s: 'OpenStreetMap',
+                dirEyebrow: 'Service directory',
+                dirTitle: 'Find the right service',
+                dirSub: 'Browse categories and search by city or service type.',
+                chipAll: 'All',
+                mapEyebrow: 'Discover near you',
+                mapTitle: 'Interactive map',
+                mapSub: 'Show your location and nearby published businesses.',
+                mapLocate: 'Locate me',
+                mapLegend: 'Published businesses',
+                mapNoPins: 'No businesses with published coordinates yet.',
+                mapNoLeaflet: 'The map could not load. Check your connection and reload.',
+                mapLocating: 'Locating you...',
+                mapLocated: 'Your location is shown on the map.',
+                mapDenied: 'Location access was not allowed.',
+                mapUnsupported: 'Your browser does not support location.',
+                gateTitle: 'Register to enter the directory',
+                gateText: 'Registration is via WhatsApp only. Your name and number are not stored on the site; the request is sent to the admin. Emergency help is always available without registering.',
+                gateName: 'Your name',
+                gatePhone: 'WhatsApp number',
+                gateSend: 'Register on WhatsApp',
+                gateDone: 'I sent the message, enter now',
+                gateEmergency: 'Emergency help without registering',
+                gateNoAdmin: 'Registration is unavailable right now. You can request emergency help directly.',
+                gateInvalid: 'Enter a name and a valid Iraqi WhatsApp number.',
+                gateOpened: 'WhatsApp opened. Send the message, then press the button below.',
+                gatePopup: 'Allow pop-ups and try again.',
+                howEyebrow: 'Simple steps',
+                howTitle: 'How do you use AutoSphere?',
+                howSub: 'From search to contact, designed to be clear and fast.',
+                step1T: 'Find a service',
+                step1: 'Type the service you need and choose a city or use the map.',
+                step2T: 'Choose a business',
+                step2: 'Check the business details and location, then contact it directly.',
+                step3T: 'Request help',
+                step3: 'In urgent cases press "Help me" and prepare your request on WhatsApp.',
+                ctaEye: 'Car broken down on the road?',
+                ctaTitle: 'Do not stay alone on the road.',
+                ctaText: 'Send the problem details and your location to the help team on WhatsApp.',
+                ctaBtn: '🆘 Help me now',
+                navProviders: 'Businesses', navRegister: 'Register your business',
+                heroBadge: 'Car services directory in Iraq',
+                providersTitle: 'Registered businesses',
+                providersIntro: 'Contact a business directly from the buttons. Each listing was submitted by its owner and reviewed.',
+                allCategories: 'All businesses',
+                noProviders: 'No listings published yet. If you run a business, register it in the section below.',
+                noContacts: 'No contact method has been published for this business yet.',
+                regHoursLabel: 'Hours',
+                btnCall: 'Call', btnWhatsapp: 'WhatsApp', btnFacebook: 'Facebook', btnInstagram: 'Instagram', btnTiktok: 'TikTok',
+                ownerTitle: 'Contact the site owner',
+                regTitle: 'Register your business',
+                regIntro: 'Add your business so customers can find it. Nothing is saved on this site: your request is sent to the admin on WhatsApp for review, and the listing is published only after verification.',
+                regName: 'Business name', regCategory: 'Business type', regGov: 'Governorate', regArea: 'Area or nearest landmark',
+                regPersonal: 'Your personal phone (for contact)', regWa: 'Business WhatsApp number (optional)',
+                regFb: 'Facebook link (optional)', regIg: 'Instagram link (optional)', regTt: 'TikTok link (optional)',
+                regHours: 'Opening hours', regDesc: 'Short description',
+                regConsent: 'I confirm the information is correct and agree to publish it in the directory after review.',
+                regSubmit: 'Send registration request on WhatsApp',
+                regPrivacy: 'The message is prepared on your device and opened in WhatsApp. You press "Send" yourself.',
+                regMissing: 'Complete the required fields (*) and accept the confirmation.',
+                regInvalidPhone: 'Check the number. Use a valid Iraqi number.',
+                regInvalidLink: 'Check the links: they must start with https:// and point to the correct site.',
+                regNoAdmin: 'Registration is currently disabled because the admin number is not set.',
+                regPopup: 'Your browser blocked WhatsApp. Allow pop-ups for this site and try again.',
+                regOpened: 'WhatsApp opened with the registration message. Press "Send" inside WhatsApp to complete the request.',
+                helpBtn: '❓ Guide',
+                guideTitle: 'How to use AutoSphere Emergency Platform?',
+                guideStep1: 'Fill in your personal details and vehicle type accurately.',
+                guideStep2: 'Detect your location via GPS button or type the nearest landmark.',
+                guideStep3: 'Tap the submit button to prepare the message and open WhatsApp.',
+                guideStep4: 'Press "Send" inside WhatsApp to deliver your message to the center.',
+                guideClose: 'Got it, start using',
+                bugIntro: 'Facing a technical issue or bug on the site? Let us know immediately:',
+                bugBtn: '🛠️ Report technical issue to developer',
+                msgTitle: '🚨 Emergency Help Request',
+                msgName: 'Name',
+                msgPhone: 'Phone',
+                msgGov: 'Governorate',
+                msgVehicle: 'Vehicle Type',
+                msgType: 'Emergency Type',
+                msgTow: 'Tow Needed',
+                msgLandmark: 'Address / Landmark',
+                msgDesc: 'Details',
+                msgLoc: 'Location'
+            },
+            ku: {
+                pageTitle: 'AutoSphere Global - خزمەتگوزاری ئۆتۆمبێل لە عێراق',
+                metaDesc: 'AutoSphere Global - ڕێنماکەت بۆ خزمەتگوزاریی ئۆتۆمبێل لە عێراق: چاککردنەوە، یارمەتی لەسەر ڕێگا، و داواکاری فریاکەوتنی پەلە.',
+                langLabel: 'زمان',
+                navServices: 'خزمەتگوزارییەکان', navCenters: 'ناوەندەکان', navEmergency: 'فریاکەوتن',
+                heroTitle: 'ئایا ئۆتۆمبێلەکەت پێویستی بە چاودێرییە؟',
+                heroText: 'ورگەی چاککردنەوە، وێستگەی سووتەمەنی و خزمەتگوزاریی تایەکان لە نزیکت بدۆزەرەوە، یان لە کاتی فریاکەوتندا یارمەتی داوا بکە بە چەند هەنگاوێکی سادە.',
+                callEmergency: 'پەیوەندی بە فریاکەوتن', requestHelp: 'داواکاری یارمەتی بنێرە',
+                formTitle: 'داواکاری یارمەتیی پەلە',
+                formIntro: 'خانەکانی خوارەوە پڕ بکەرەوە. واتساپ بە نامەیەکی ئامادەکراوەوە دەکرێتەوە. داواکارییەکە تەنها دوای دابگرتنی "ناردن" لە ناو واتساپ دەنێردرێت.',
+                lName: 'ناوی تەواو', lPhone: 'ژمارەی مۆبایلی تۆ بۆ پەیوەندیکردن', lGov: 'پارێزگا', lType: 'جۆری کێشە',
+                lTow: 'پێویستت بە هەڵگرتنی ئۆتۆمبێلە؟', lLoc: 'شوێنەکەت', lLandmark: 'ناونیشان یان نزیکترین نیشانە',
+                lDesc: 'وردەکاری زیاتر',
+                lConsent: 'ڕازیم بە ناردنی زانیارییەکانم (ناو، ژمارە، شوێن) بۆ ژمارەی یارمەتیی دیاریکراو بۆ ئەوەی پەیوەندیم پێوە بکەن.',
+                choose: '-- هەڵبژێرە --',
+                lVehicle: 'جۆری ئۆتۆمبێل', vFuel: 'تەنها بە سووتەمەنی', vHybrid: 'هایبرید (سووتەمەنی + باتری)', vEv: 'تەنها بە باتری (کارەبایی)',
+                lBrand: 'بڕگە و مۆدێل (ئارەزوومەندانە)',
+                phPhone: '07xxxxxxxxx', phBrand: 'نموونە: BYD Atto 3 2023', phLandmark: 'نموونە: نزیک پردی شارەکە، ڕێگای خێرا', phDesc: 'کورتە باسێک لە حاڵەتەکە بکە...',
+                evTowWarn: 'ئاگادارکردنەوە: ئۆتۆمبێلی کارەبایی پێویستی بە لۆری هەڵگرتن هەیە (تایەکان بەرز). ڕاکێشان لە پشتەوە زیانی بە سیستەمەکەی دەگات، بۆیە ئەگەر بکرێت لۆری هەڵبژێرە.',
+                evSafety: 'ئاسایش: ئەگەر دوکەڵ، کزە، ڕشانەوە یان بۆنێکی نامۆت بینی، یەکسەر لە ئۆتۆمبێلەکە دووربکەوەرەوە و پەیوەندی بە فریاکەوتنەوە بکە. دەست بە کابلە پرتەقاڵییەکان یان بەشە ئاشکراکان مەدە.',
+                type_fuel_delivery: 'پێویستم بە گەیاندنی بەنزینە بۆ شوێنەکەم',
+                type_ev_battery: 'باتری تەواو بووە یان بۆ گەیشتن بەس نییە',
+                type_ev_charge: 'کێشە لە شارژکردن یان وێستگەی شارژ کار ناکات',
+                type_ev_warning: 'ئاگادارکردنەوە یان کێشە لە سیستەمی کارەبایی',
+                type_mechanical: 'کێشەی میکانیکی لە ناکاو', type_fuel: 'بەنزین تەواو بووە / باتری داماوە',
+                type_tire: 'تایەری تەقیوە', type_accident: 'ڕووداوی هاتووچۆ', type_other: 'تر',
+                tow_none: 'نەخێر، پێویستم بە هەڵگرتن نیە', tow_flatbed: 'بەڵێ، ئۆتۆمبێلی هەڵگرتنی تایبەت (لۆری)',
+                tow_rope: 'بەڵێ، بە ئۆتۆمبێلی ئاسایی لە پشتەوە', tow_unknown: 'دڵنیا نیم',
+                locBtn: 'شوێنەکەت بە خۆکار دیاری بکە',
+                locNone: 'هێشتا شوێن دیاری نەکراوە.',
+                locSearching: 'خەریکی دیاریکردنی شوێنەکەتم بە وردی...',
+                locGood: 'وردی باش: ±{n} م.',
+                locMid: 'وردی ناوەند: ±{n} م. دڵنیابەرەوە خاڵەکە لەسەر شوێنەکەتە.',
+                locLow: 'وردی کەم: ±{n} م. خاڵەکە بۆ شوێنی ڕاستەقینەت ڕابکێشە لەسەر نەخشەکە.',
+                locAdjusted: 'خاڵەکە بە دەست لەسەر نەخشە دەستکاری کراوە.',
+                locDenied: 'ڕێگە نەدراوە بە دەستگەیشتن بە شوێن. لە ڕێکخستنەکانی وێبگەڕ یان مۆبایل چالاکی بکە، یان ناونیشانەکە بە دەست بنووسە.',
+                locFail: 'نەتوانرا شوێن دیاری بکرێت. دڵنیابەرەوە GPS چالاکە، یان ناونیشانەکە بە دەست بنووسە.',
+                locUnsupported: 'ئامێرەکەت پشتگیری دیاریکردنی شوێن ناکات. تکایە ناونیشانەکە بنووسە.',
+                mapFallback: 'نەخشە یان بلۆکەکانی بەردەست نین. دەتوانیت پشت بە هێڵکارییەکان و ناونیشانی دەستی خوارەوە ببەستیت.',
+                openInMaps: 'بکەرەوە لە Google Maps',
+                errName: 'تکایە ناوی تەواو بنووسە.',
+                errPhone: 'ژمارەی مۆبایل هەڵەیە. نموونە: 07801234567',
+                errGov: 'پارێزگاکە هەڵبژێرە.', errType: 'جۆری کێشەکە هەڵبژێرە.', errTow: 'هەڵبژاردن بکە بۆ ئەوەی پێویستت بە هەڵگرتن هەیە یان نا.',
+                errConsent: 'پێویستە ڕەزامەندی بدەیت بۆ ناردنی زانیارییەکانت.',
+                errLocation: 'شوێنەکەت لەسەر نەخشە دیاری بکە، یان ناونیشان یان نزیکترین نیشانە بنووسە.',
+                errNoTarget: 'ژمارەی فریاکەوتن ڕێکنەخراوە یان تاقیکارییە. تکایە پەیوەندی بە بەڕێوەبەرایەتی بکە.',
+                errGeneric: 'هەڵەیەک ڕوویدا لە کاتی ئامادەکردنی داواکارییەکە. دووبارە هەوڵ بدەوە.',
+                sending: 'خەریکی ئامادەکردنی داواکارییەکەین...',
+                sentOk: 'نامەکە ئامادە کرا و واتساپ کرایەوە. داواکارییەکە تەنها دوای دابگرتنی "ناردن" لە ناو واتساپ دەنێردرێت.',
+                guideDisclaimer: 'ئەم پەڕەیە ڕووکاری پەیوەندییە، نەک خزمەتگوزاری فریاکەوتنی فەرمی، و ناتوانێت یارمەتیی کاتی بەڵێن بدات. لە مەترسیی ڕاستەوخۆدا پەیوەندی بە دامەزراوە فەرمییەکانەوە بکە.',
+                demoNotice: 'ئاگاداری: ژمارەکانی ئەم وەشانە تاقیکارین و بۆ پەیوەندیی ڕاستەقینە بەکارمەهێنن تا ژمارەی ڕاستەقینە دانەنرێت.',
+                demoBadge: 'زانیاری تاقیکاری',
+                installTitle: 'دامەزراندنی پەڕە لەسەر مۆبایل',
+                installAndroid: 'ئەندرۆید (Chrome): لە لیستی ⋮ هەڵبژێرە "Install app" یان "Add to Home screen".',
+                installIos: 'ئایفۆن (Safari تەنها): دوگمەی Share دابگرە، پاشان "Add to Home Screen".',
+                installNote: 'دامەزراندن وەک کورتەڕێگەیەکە بۆ پەڕەکە. دەستگەیشتن بە شوێن و کردنەوەی واتساپ ڕێگەپێدانی وێبگەڕ و ئامێر پێویستە. لەسەر هەموو ئامێرەکان تاقی نەکراوەتەوە.',
+                phoneLocalLabel: 'شێوازی ناوخۆیی:',
+                mapLibFail: 'کتێبخانەی نەخشە باربوو نەبوو. هێڵکارییەکانی خوارەوە دەنێردرێن، و دەتوانیت ناونیشانەکە بە دەست بنووسیت.',
+                mapTileError: 'وێنەی نەخشە باربوو نەبوو (ئینتەرنێت یان خزمەتگوزاری بەردەست نییە). هێڵکارییەکان هەر دروستن و دەتوانیت ناونیشانەکە بە دەست بنووسیت.',
+                mapInitError: 'هەڵەیەک ڕوویدا لە دروستکردنی نەخشە. هێڵکارییەکان هەر دروستن و دەتوانیت ناونیشانەکە بە دەست بنووسیت.',
+                bugOpened: 'واتساپ کرایەوە بۆ ناردنی ڕاپۆرتەکە بۆ گەشەپێدەر. ناردن لە ناو واتساپەوە ئەنجام دەدرێت.',
+                bugNoPopup: 'وێبگەڕ پەنجەرەکەی گرت. ئێستا ناتوانرێت ڕاپۆرتەکە بنێردرێت.',
+                errVehicle: 'جۆری ئۆتۆمبێلەکە هەڵبژێرە.',
+                errFuel: 'جۆری سووتەمەنی هەڵبژێرە.',
+                lFuelKind: 'جۆری سووتەمەنی',
+                fuelPetrol: 'بەنزین',
+                fuelDiesel: 'دیزڵ',
+                fuelGas: 'گاز (CNG / LPG)',
+                type_hybrid_battery: 'ئاگادارکردنەوە لە باتری هایبرید یان وەستانی سیستەم',
+                chooseVehicleFirst: '-- سەرەتا جۆری ئۆتۆمبێل هەڵبژێرە --',
+                errQuestion: 'وەڵامی هەموو پرسیارە دەرکەوتووەکان بدەوە.',
+                injuryAlert: 'ئەگەر برینداری هەبوو، یەکسەر فریاکەوتن و نەخۆشخانە پەیوەندی پێوە بکە پێش هەموو شتێک.',
+                qSpare: 'ئایا تایەری یەدەگت هەیە؟',
+                qTirePos: 'کام تایەر تەقیوە؟',
+                qRoadSafe: 'ئایا ئۆتۆمبێلەکە لە شوێنێکی ئارام دایە دوور لە هاتووچۆ؟',
+                qFuelProblem: 'کێشەکە دەقیقاً چییە؟',
+                qFuelAmount: 'بڕی سووتەمەنی پێویست',
+                qStart: 'ئایا ئۆتۆمبێلەکە کار دەکات؟',
+                qWarningLight: 'ئایا ڕووناکی ئاگادارکردنەوە لەسەر تابلۆکە دەرکەوت؟',
+                qInjury: 'ئایا برینداری هەیە؟',
+                qBlock: 'ئایا ئۆتۆمبێلەکە هاتووچۆ دەبەستێتەوە؟',
+                qCharge: 'ڕێژەی شارژی نزیکەیی',
+                qChargerType: 'ئۆتۆمبێلەکەت گشتی لە کوێ شارژ دەکەیت؟',
+                qChargeFault: 'کاتێک شاحن دەبەستیت چی ڕوودەدات؟',
+                qEvMsg: 'چ نامە یان ئاگادارکردنەوەیەک دەردەکەوێت؟',
+                qEvMoving: 'ئایا ئۆتۆمبێلەکە دەجوولێت؟',
+                qHybShow: 'چی ڕوودەدات بۆ ئۆتۆمبێلەکە؟',
+                optYes: 'بەڵێ',
+                optNo: 'نەخێر',
+                optUnknown: 'دڵنیا نیم',
+                posFL: 'پێشەوە چەپ',
+                posFR: 'پێشەوە ڕاست',
+                posRL: 'پشتەوە چەپ',
+                posRR: 'پشتەوە ڕاست',
+                probOut: 'بەنزین تەواو بووە',
+                probBatt: 'باتری داماوە',
+                amt10: 'نزیکەی 10 لیتر',
+                amt20: '20 لیتر',
+                amt40: '40 لیتر یان زیاتر',
+                chg10: 'کەمتر لە 10%',
+                chg25: 'لە 10% بۆ 25%',
+                chg99: 'زیاتر لە 25%',
+                chHome: 'شاحنی ماڵەوە',
+                chPublic: 'وێستگەی شارژی گشتی',
+                chMobile: 'شاحنی جوڵاو',
+                cfNoStart: 'شارژکردن دەست پێ ناکات',
+                cfStops: 'شارژکردن بە ناکاو دەوەستێت',
+                cfError: 'نامەی هەڵە دەردەکەوێت',
+                evPower: 'ئاگادارکردنەوە لە سیستەمی کارەبایی',
+                evTemp: 'گەرمبوونی زیادەی باتری',
+                evInsul: 'ئاگادارکردنەوەی عایق یان ڕشانەوە',
+                evOther: 'نامەیەکی تر',
+                hybWarn: 'ئاگادارکردنەوە لەسەر شاشە',
+                hybPower: 'لاوازی هێز یان خێرایی',
+                hybStop: 'ئۆتۆمبێلەکە وەستا',
+                popupBlocked: 'وێبگەڕ ڕێگەی بە کردنەوەی پەنجەرەی نوێ نەدا. بەستەرەکەی خوارەوە بەکاربهێنە بۆ ناردنی داواکارییەکە.',
+                openWA: 'واتساپ لێرە بکەرەوە',
+                liveHint: 'گرنگ: لە واتساپ 📎 دابگرە، پاشان "شوێن"، پاشان "هاوبەشکردنی شوێنی ڕاستەوخۆ" تاکو شوێنەکەت بە بەردەوامی بگاتە ناوەندەکە.',
+                submit: 'ناردنی داواکاری لە ڕێگەی واتساپەوە',
+                privacy: 'زانیارییەکانت لە ناوخۆدا ئامادە دەکرێن و لە واتساپ دەکرێنەوە، و لە هیچ خادمێکدا هەڵناگیرێن. نامەکە تەنها دوای دابگرتنی "ناردن" لە ناو واتساپ دەگات.',
+                servicesTitle: 'خزمەتگوزارییەکانمان',
+                svc1Title: 'چاککردنەوەی ئۆتۆمبێل', svc1Text: 'پەیوەندی بکە بە ناوەندەکانی چاککردنەوە لە پارێزگاکەت.',
+                svc2Title: 'یارمەتی لەسەر ڕێگا', svc2Text: 'یارمەتیی خێرا بخوازە کاتێک ئۆتۆمبێلەکەت خراپ دەبێت یان بەنزینی تەواو دەبێت.',
+                svc3Title: 'هەڵگرتن و گواستنەوە', svc3Text: 'ئۆتۆمبێلەکەت بگوازەرەوە بۆ نزیکترین ناوەندی چاککردنەوە.',
+                svc4Title: 'داواکاری فریاکەوتن', svc4Text: 'بە چەند هەنگاوێک حاڵەتەکەت و شوێنەکەت بنێرە.',
+                centersTitle: 'ناوەندە هاوبەشەکانی چاککردنەوە',
+                allGovs: 'هەموو پارێزگاکان',
+                allServices: 'هەموو خزمەتگوزارییەکان',
+                submitUnavailable: 'ناردنی داواکاری لە ڕێگەی واتساپەوە ئێستا بەردەست نییە. لە حاڵەتی فریاکەوتندا پەیوەندی بە دامەزراوە فەرمییەکانەوە بکە.', msgNone: 'نەنووسراوە', msgNoDesc: 'هیچ نییە', msgLocNotSet: 'لەسەر نەخشە دیاری نەکراوە', msgLocManual: 'خاڵی دەستکاریکراو', msgLocAuto: 'شوێنی خۆکار لە ئامێرەوە', msgAccuracy: 'وردی ±{n} م', msgCoords: 'هێڵکارییەکان', msgMapLink: 'نەخشە', svcTow: 'سڕینەوە و یارمەتیی ڕێگا', svcFuel: 'سووتەمەنی', svcPetrol: 'بەنزین', svcDiesel: 'دیزڵ', svcGas: 'گاز (CNG / LPG)', svcEv: 'شارژکردنی باتری',
+                noCenters: 'هیچ ناوەندێک لەم پارێزگایەدا نییە لە ئێستادا.',
+                waBtn: 'واتساپ', callBtn: 'پەیوەندی', invalidNumber: 'ژمارەی نادروست',
+                bugUnavailable: 'ڕاگەیاندنی کێشە لە ڕێگەی واتساپەوە بەردەست نییە لە ئێستادا بەهۆی نەبوونی ڕێکخستنی ژمارەی گەشەپێدەر.',
+                disclaimer: 'ئەم پەڕەیە جێگای پەیوەندیکردن بە فریاکەوتنی فەرمی ناگرێتەوە لە حاڵەتە مەترسیدارەکاندا.',
+                rights: 'هەموو مافەکان پارێزراون',
+                privacyNote: 'داتای فۆرمەکان لەم ماڵپەڕەدا پاشەکەوت ناکرێت. داتای تۆماربوون و فریاکەوتن تەنها لە ڕێگەی واتساپەوە دەنێردرێت کاتێک تۆ خۆت "ناردن" دادەگریت. فۆنتەکان و Tailwind و Leaflet لە سێرڤەرە دەرەکییەکانەوە بار دەکرێن، و نەخشەکان لە OpenStreetMap.',
+                tagline: 'هەموو خزمەتگوزارییەکانی ئۆتۆمبێلەکەت لە یەک شوێن',
+                navDir: 'ڕێنمای خزمەتگوزاری',
+                navMap: 'نەخشە',
+                navHow: 'چۆن کار دەکات؟',
+                ctaHeader: 'ئێستا یارمەتیم بدە',
+                heroTitle2: 'ئێمە ڕێگەی گەڕانەوەت پێ دەدەین.',
+                heroSearchPh: 'بگەڕێ بۆ ورشە، کارەبای ئۆتۆمبێل، پەنچەر...',
+                allCities: 'هەموو شارەکان',
+                searchNow: 'بگەڕێ',
+                qLabel: 'باوترین:',
+                qBody: 'سمکری',
+                qEv: 'کارەبای ئۆتۆمبێل',
+                qTires: 'تایە',
+                exploreDir: 'ڕێنماکە ببینە',
+                needHelp: 'پێویستم بە یارمەتیی خێرایە',
+                ccLabel: 'ناوەندی کۆنترۆڵ',
+                ccTitle: 'گەشتەکەت لەگەڵ ئێمە ئاسانترە',
+                tile1: 'ورگەکانی چاککردنەوە',
+                tile1s: 'ورشە و شارەزایانی ئۆتۆمبێل',
+                tile2: 'نەخشەی ڕاستەوخۆ',
+                tile2s: 'نزیکترینەکە بدۆزەرەوە',
+                tile3: 'خزمەتگوزاریی ڕێگا',
+                tile3s: 'تایە، باتری و ڕاکێشان',
+                tile4: 'یارمەتیم بدە',
+                tile4s: 'بە خێرایی یارمەتی داوا بکە',
+                waRowT: 'پەیوەندیی ڕاستەوخۆ لە ڕێگەی واتساپەوە',
+                waRowS: 'پێش ڕۆیشتن پرسیار لە خزمەتگوزاری بکە',
+                waRowB: 'ئاسان و خێرا',
+                st1: 'GPS',
+                st1s: 'هاوبەشکردنی شوێنەکەت بە ڕەزامەندیت',
+                st2: 'واتساپ',
+                st2s: 'پەیوەندیی ڕاستەوخۆ و ئاسان',
+                st3: '3 زمان',
+                st3s: 'عەرەبی، ئینگلیزی و کوردی',
+                st4: 'نەخشە',
+                st4s: 'OpenStreetMap',
+                dirEyebrow: 'ڕێنمای خزمەتگوزاری',
+                dirTitle: 'خزمەتگوزاریی گونجاو بدۆزەرەوە',
+                dirSub: 'پۆلەکان ببینە و بە شار یان جۆری خزمەتگوزاری بگەڕێ.',
+                chipAll: 'هەموو',
+                mapEyebrow: 'لە نزیکتەوە بدۆزەرەوە',
+                mapTitle: 'نەخشەی ڕاستەوخۆ',
+                mapSub: 'شوێنەکەت و چالاکییە نزیکەکان پیشان بدە.',
+                mapLocate: 'شوێنەکەم دیاری بکە',
+                mapLegend: 'چالاکییە بڵاوکراوەکان',
+                mapNoPins: 'هێشتا هیچ چالاکییەک بە شوێنی بڵاوکراوە نییە.',
+                mapNoLeaflet: 'نەخشەکە باربوو نەبوو. ئینتەرنێتەکەت بپشکنە و دووبارە باری بکەرەوە.',
+                mapLocating: 'شوێنەکەت دیاری دەکرێت...',
+                mapLocated: 'شوێنەکەت لەسەر نەخشە پیشان دراوە.',
+                mapDenied: 'ڕێگە نەدرا بە شوێنەکەت.',
+                mapUnsupported: 'وێبگەڕەکەت پشتگیریی شوێن ناکات.',
+                gateTitle: 'بۆ چوونە ناو ڕێنماکە تۆمار بکە',
+                gateText: 'تۆمارکردن تەنها لە ڕێگەی واتساپەوەیە. ناو و ژمارەکەت لەم ماڵپەڕەدا پاشەکەوت ناکرێت. یارمەتیی فریاکەوتن هەمیشە بەبێ تۆمارکردن بەردەستە.',
+                gateName: 'ناوت',
+                gatePhone: 'ژمارەی واتساپ',
+                gateSend: 'لە واتساپ تۆمار بکە',
+                gateDone: 'نامەکەم ناردووە، ئێستا بچۆرە ناوەوە',
+                gateEmergency: 'یارمەتیی فریاکەوتن بەبێ تۆمارکردن',
+                gateNoAdmin: 'تۆمارکردن ئێستا بەردەست نییە. دەتوانیت یارمەتیی فریاکەوتن ڕاستەوخۆ داوا بکەیت.',
+                gateInvalid: 'ناو و ژمارەی واتساپی عێراقیی دروست بنووسە.',
+                gateOpened: 'واتساپ کرایەوە. نامەکە بنێرە و دوگمەی خوارەوە دابگرە.',
+                gatePopup: 'پەنجەرەی سەرهەڵدەر ڕێگە پێبدە و دووبارە هەوڵ بدەرەوە.',
+                howEyebrow: 'هەنگاوی سادە',
+                howTitle: 'چۆن AutoSphere بەکار دەهێنیت؟',
+                howSub: 'لە گەڕان تا پەیوەندی، ئەزموونەکە ڕوون و خێرا دیزاین کراوە.',
+                step1T: 'خزمەتگوزاری بدۆزەرەوە',
+                step1: 'جۆری خزمەتگوزارییەکە بنووسە و شار هەڵبژێرە یان نەخشە بەکاربهێنە.',
+                step2T: 'چالاکییەک هەڵبژێرە',
+                step2: 'زانیاریی چالاکییەکە و شوێنەکەی ببینە، پاشان ڕاستەوخۆ پەیوەندی پێوە بکە.',
+                step3T: 'یارمەتی داوا بکە',
+                step3: 'لە کاتی فریاکەوتندا "یارمەتیم بدە" دابگرە و داواکارییەکەت لە واتساپ ئامادە بکە.',
+                ctaEye: 'ئۆتۆمبێلەکەت لە ڕێگادا وەستاوە؟',
+                ctaTitle: 'لە ڕێگادا تەنیا مەمێنەوە.',
+                ctaText: 'وردەکاریی کێشەکە و شوێنەکەت بۆ تیمی یارمەتی لە واتساپ بنێرە.',
+                ctaBtn: '🆘 ئێستا یارمەتیم بدە',
+                navProviders: 'چالاکییەکان', navRegister: 'چالاکییەکەت تۆمار بکە',
+                heroBadge: 'ڕێنمای خزمەتگوزارییەکانی ئۆتۆمبێل لە عێراق',
+                providersTitle: 'چالاکییە تۆمارکراوەکان',
+                providersIntro: 'ڕاستەوخۆ لەڕێی دوگمەکانەوە پەیوەندی بە چالاکییەکە بکە. هەر چالاکییەک خاوەنەکەی ناردوویەتی و پێداچوونەوەی بۆ کراوە.',
+                allCategories: 'هەموو چالاکییەکان',
+                noProviders: 'هێشتا هیچ چالاکییەک بڵاو نەکراوەتەوە. ئەگەر چالاکییەکت هەیە، لە بەشی خوارەوە تۆماری بکە.',
+                noContacts: 'هێشتا هیچ ڕێگەی پەیوەندیی بۆ ئەم چالاکییە بڵاو نەکراوەتەوە.',
+                regHoursLabel: 'کاتی کارکردن',
+                btnCall: 'پەیوەندی', btnWhatsapp: 'واتساپ', btnFacebook: 'فەیسبووک', btnInstagram: 'ئینستاگرام', btnTiktok: 'تیکتۆک',
+                ownerTitle: 'پەیوەندی بە خاوەنی ماڵپەڕەوە',
+                regTitle: 'چالاکییەکەت لە ڕێنماکەدا تۆمار بکە',
+                regIntro: 'چالاکییەکەت زیاد بکە تا کڕیاران ببینن. هیچ شتێک لەم ماڵپەڕەدا پاشەکەوت ناکرێت؛ داواکارییەکەت بۆ بەڕێوەبەری لە واتساپ دەنێردرێت بۆ پێداچوونەوە، و تەنها دوای پشتڕاستکردنەوە بڵاو دەبێتەوە.',
+                regName: 'ناوی چالاکی', regCategory: 'جۆری چالاکی', regGov: 'پارێزگا', regArea: 'ناوچە یان نزیکترین شوێن',
+                regPersonal: 'ژمارەی تایبەتی خۆت (بۆ پەیوەندی)', regWa: 'ژمارەی واتساپی چالاکی (ئارەزوومەندانە)',
+                regFb: 'لینکی فەیسبووک (ئارەزوومەندانە)', regIg: 'لینکی ئینستاگرام (ئارەزوومەندانە)', regTt: 'لینکی تیکتۆک (ئارەزوومەندانە)',
+                regHours: 'کاتی کارکردن', regDesc: 'وەسفێکی کورت',
+                regConsent: 'دڵنیام زانیارییەکان ڕاستن، و ڕازیم بە بڵاوکردنەوەیان لە ڕێنماکەدا دوای پێداچوونەوە.',
+                regSubmit: 'داواکاری تۆمارکردن لە واتساپ بنێرە',
+                regPrivacy: 'نامەکە لەسەر ئامێرەکەت ئامادە دەکرێت و لە واتساپ دەکرێتەوە، تۆ خۆت "ناردن" دەدەیت.',
+                regMissing: 'خانە پێویستەکان (*) پڕ بکەرەوە و ڕەزامەندی بدە.',
+                regInvalidPhone: 'ژمارەکە بپشکنە. ژمارەیەکی عێراقیی دروست بەکاربهێنە.',
+                regInvalidLink: 'لینکەکان بپشکنە: دەبێت بە https:// دەست پێبکەن و بۆ ماڵپەڕی ڕاست بن.',
+                regNoAdmin: 'تۆمارکردن ئێستا ناچالاکە چونکە ژمارەی بەڕێوەبەر دانەنراوە.',
+                regPopup: 'وێبگەڕ ڕێگەی نەدا واتساپ بکرێتەوە. ڕێگە بدە بە پەنجەرەی سەرهەڵدەر بۆ ئەم ماڵپەڕە و دووبارە هەوڵ بدەرەوە.',
+                regOpened: 'واتساپ بە نامەی تۆمارکردنەوە کرایەوە. "ناردن" لناو واتساپ دابگرە بۆ تەواوکردنی داواکارییەکە.',
+                helpBtn: '❓ ڕێنما',
+                guideTitle: 'چۆن سەکۆی فریاکەوتنی AutoSphere بەکاربهێنیت؟',
+                guideStep1: 'خانەکانی زانیاری کەسایەتی و جۆری ئۆتۆمبێل بە وردی پڕ بکەرەوە.',
+                guideStep2: 'شوێنەکەت بە خۆکار بە دوگمەی GPS دیاری بکە یان نزیکترین نیشانە بنووسە.',
+                guideStep3: 'دوگمەی ناردن دابگرە بۆ ئامادەکردنی نامە و کردنەوەی واتساپ یەکسەر.',
+                guideStep4: 'لە ناو واتساپ دوگمەی "ناردن" دابگرە بۆ گەیشتنی نامەکەت بە ناوەندی مەبەست.',
+                guideClose: 'تێگەیشتم، دەست پێبکە',
+                bugIntro: 'کێشەیەکی تەکنیکی یان هەڵەت بینی لە ماڵپەڕەکەدا؟ یەکسەر پێمان ڕابگەیەنە:',
+                bugBtn: '🛠️ ڕاگەیاندنی کێشەی تەکنیکی بۆ گەشەپێدەر',
+                msgTitle: '🚨 داواکاری فریاکەوتنی پەلە',
+                msgName: 'ناو',
+                msgPhone: 'مۆبایل',
+                msgGov: 'پارێزگا',
+                msgVehicle: 'جۆری ئۆتۆمبێل',
+                msgType: 'جۆری کێشە',
+                msgTow: 'پێویستی هەڵگرتن',
+                msgLandmark: 'ناونیشان / نیشانە',
+                msgDesc: 'وردەکاری',
+                msgLoc: 'شوێن'
+            }
+        };
+
+        const $ = id => document.getElementById(id);
+        let currentLang = 'ar';
+
+        const t = (key, vars = {}) => {
+            const dict = I18N[currentLang] || I18N.ar;
+            let text = dict[key] ?? I18N.ar[key] ?? key;
+            Object.entries(vars).forEach(([k, v]) => { text = text.replace(`{${k}}`, v); });
+            return text;
+        };
+
+        const langSelect = $('lang-select');
+        let locMsg = { key: 'locNone', tone: '', vars: {} };
+        let pin = null;
+
+        function applyLang(lang) {
+            if (!I18N[lang]) lang = 'ar';
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = LANG_DIR[lang];
+            document.title = t('pageTitle');
+            document.querySelector('meta[name="description"]').content = t('metaDesc');
+
+            document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+            
+            const phMap = {
+                'emergency-phone': 'phPhone',
+                'emergency-brand': 'phBrand',
+                'emergency-landmark': 'phLandmark',
+                'emergency-desc': 'phDesc'
+            };
+            Object.entries(phMap).forEach(([id, key]) => {
+                const el = $(id);
+                if (el) el.placeholder = t(key);
+            });
+
+            renderGovOptions();
+            renderServiceOptions();
+            renderVehicleFields();
+            renderCenters();
+            renderProviderFilters();
+            renderProviders();
+            renderRegFormOptions();
+            renderRegStatus();
+            renderOwnerContact();
+            renderHeroCity();
+            renderDirStatus();
+            renderGateStatus();
+            document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+            validateEmergencyCallButton();
+            updatePhonePreview();
+            renderMapStatus();
+            renderLocMsg();
+            renderFormStatus();
+            setBugStatus(bugKey);
+            if (pin) $('coords-link').textContent = t('openInMaps');
+
+            langSelect.value = lang;
+            try { localStorage.setItem('as_lang', lang); } catch (_) {}
+        }
+
+        const LANG_DIR = { ar: 'rtl', en: 'ltr', ku: 'rtl' };
+
+        function detectInitialLang() {
+            try {
+                const saved = localStorage.getItem('as_lang');
+                if (saved && I18N[saved]) return saved;
+            } catch (_) {}
+            const nav = (navigator.language || '').toLowerCase();
+            if (nav.startsWith('en')) return 'en';
+            if (nav.startsWith('ku') || nav.startsWith('ckb')) return 'ku';
+            return 'ar';
+        }
+
+        const guideModal = $('guide-modal');
+        const openGuideBtn = $('open-guide-btn');
+        const closeGuideBtn = $('close-guide-btn');
+        let guideReturnFocus = null;
+
+        function openGuide() {
+            guideReturnFocus = document.activeElement;
+            guideModal.classList.remove('hidden');
+            closeGuideBtn.focus();
+        }
+
+        function closeGuide() {
+            guideModal.classList.add('hidden');
+            try { localStorage.setItem('as_guided', 'true'); } catch (_) {}
+            if (guideReturnFocus && typeof guideReturnFocus.focus === 'function') guideReturnFocus.focus();
+            showGateIfNeeded();
+        }
+
+        try {
+            if (!localStorage.getItem('as_guided')) guideModal.classList.remove('hidden');
+        } catch (_) {
+            guideModal.classList.remove('hidden');
+        }
+
+        openGuideBtn.addEventListener('click', openGuide);
+        closeGuideBtn.addEventListener('click', closeGuide);
+        document.addEventListener('keydown', e => {
+            if (guideModal.classList.contains('hidden')) return;
+            if (e.key === 'Escape') closeGuide();
+            // النافذة فيها زر واحد، لذلك يبقى التركيز عليه عند Tab
+            if (e.key === 'Tab') { e.preventDefault(); closeGuideBtn.focus(); }
+        });
+
+        // زر بلاغ عطل فني: لا يُفتح شيء إلا برقم مطور صالح، ويُعرض النتيجة داخل الصفحة
+        let bugKey = '';
+        function setBugStatus(key) {
+            bugKey = key;
+            $('bug-status').textContent = key ? t(key) : '';
+        }
+
+        $('report-bug-btn').addEventListener('click', () => {
+            const devTarget = getUsablePhone(CONFIG.developerWhatsApp);
+            if (!devTarget) {
+                setBugStatus('bugUnavailable');
+                return;
+            }
+            const bugMsg = `🛠️ Technical Bug Report\n- Lang: ${currentLang}\n- User Agent: ${navigator.userAgent}`;
+            const url = `https://wa.me/${devTarget}?text=${encodeURIComponent(bugMsg)}`;
+            const win = window.open('', '_blank');
+            if (!win) {
+                setBugStatus('bugNoPopup');
+                return;
+            }
+            win.location.href = url;
+            try { win.opener = null; } catch (_) {}
+            setBugStatus('bugOpened');
+        });
+
+        function renderCenters() {
+            const list = $('centers-list');
+            const selectedGov = $('filter-gov')?.value || '';
+            list.replaceChildren();
+
+            const selectedService = $('filter-service')?.value || '';
+            const filteredCenters = CONFIG.centers.filter(c =>
+                (!selectedGov || c.governorate === selectedGov) &&
+                (!selectedService || c.services.includes(selectedService)) &&
+                (!heroQuery || c.name.toLowerCase().includes(heroQuery.toLowerCase())));
+
+            if (filteredCenters.length === 0) {
+                const empty = document.createElement('p');
+                empty.className = 'text-sm text-slate-400 text-center py-4';
+                empty.textContent = t('noCenters');
+                list.appendChild(empty);
+                return;
+            }
+
+            filteredCenters.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'card-lift bg-panel border border-line p-5 rounded-2xl flex flex-col gap-4';
+
+                const info = document.createElement('div');
+                const title = document.createElement('h3');
+                title.className = 'font-bold';
+                title.textContent = c.name;
+                const meta = document.createElement('p');
+                meta.className = 'text-sm text-slate-400';
+                
+                let metaText = GOVS[c.governorate]?.[currentLang] ?? c.governorate;
+                if (isDemoNumber(c.whatsapp) || isDemoNumber(c.phone)) metaText += ` · ${t('demoBadge')}`;
+                const formattedPrice = formatCurrency(c.priceAmount, currentLang);
+                if (formattedPrice) {
+                    metaText += ` · ${formattedPrice}`;
+                }
+                meta.textContent = metaText;
+
+                // كل خدمة تظهر كشارة مستقلة، ولا تُعرض إلا الخدمات المضبوطة فعلاً للمحطة
+                const chips = document.createElement('div');
+                chips.className = 'flex flex-wrap gap-1 mt-2';
+                (c.services || []).forEach(key => {
+                    const tk = SERVICE_TYPES[key];
+                    if (!tk) return;
+                    const chip = document.createElement('span');
+                    chip.className = 'text-xs bg-ink border border-line rounded-full px-2 py-0.5 text-slate-200';
+                    chip.textContent = t(tk);
+                    chips.appendChild(chip);
+                });
+                info.append(title, meta, chips);
+
+                const actions = document.createElement('div');
+                actions.className = 'flex gap-2 flex-wrap';
+
+                // فصل فحص وحفظ واتساب المركز عن اتصال المركز تماماً
+                const wa = document.createElement('a');
+                const usableWa = getUsablePhone(c.whatsapp);
+                if (usableWa) {
+                    wa.href = `https://wa.me/${usableWa}`;
+                    wa.target = '_blank';
+                    wa.rel = 'noopener noreferrer';
+                    wa.className = 'bg-green-600 text-white px-4 py-2 rounded text-sm font-bold flex items-center gap-2 hover:bg-green-700 transition';
+                    wa.textContent = t('waBtn');
+                } else {
+                    wa.className = 'bg-gray-700 text-slate-400 px-4 py-2 rounded text-sm font-bold flex items-center gap-2 cursor-not-allowed opacity-60 pointer-events-none';
+                    wa.setAttribute('aria-disabled', 'true');
+                    wa.textContent = `${t('waBtn')} (${t('invalidNumber')})`;
+                }
+                actions.appendChild(wa);
+
+                const call = document.createElement('a');
+                const usableCall = getUsablePhone(c.phone);
+                if (usableCall) {
+                    call.href = 'tel:+' + usableCall;
+                    call.className = 'border border-line px-4 py-2 rounded text-sm font-bold hover:border-accent hover:text-accent transition';
+                    call.textContent = `${t('callBtn')} ${formatDisplayPhone(c.phone)}`;
+                    actions.appendChild(call);
+                } else {
+                    call.className = 'border border-line border-dashed text-slate-400 px-4 py-2 rounded text-sm font-bold cursor-not-allowed opacity-60 pointer-events-none';
+                    call.setAttribute('aria-disabled', 'true');
+                    call.textContent = `${t('callBtn')} (${t('invalidNumber')})`;
+                }
+                actions.appendChild(call);
+
+                card.append(info, actions);
+                list.appendChild(card);
+            });
+        }
+
+        // ===== الأنشطة المسجّلة وتسجيل أصحاب الأنشطة =====
+        // لا يوجد خادم ولا قاعدة بيانات: القائمة تُقرأ من CONFIG.providers، والتسجيل يُفتح عبر واتساب فقط.
+        const CATEGORY_LABELS = {
+            wash: { ar: 'غسيل السيارات', en: 'Car wash', ku: 'شۆردنی ئۆتۆمبێل' },
+            fuel: { ar: 'محطة وقود', en: 'Fuel station', ku: 'وێستگەی سووتەمەنی' },
+            repair: { ar: 'صيانة وميكانيك', en: 'Maintenance & mechanics', ku: 'چاککردنەوەی ئۆتۆمبێل' },
+            body: { ar: 'سمكرة ودهان', en: 'Body & paint', ku: 'سمکری و بۆیەکردن' },
+            tires: { ar: 'إطارات وبنشر', en: 'Tires & puncture', ku: 'تایەکان و پەنچەر' },
+            oil: { ar: 'تبديل الزيوت', en: 'Oil change', ku: 'گۆڕینی زەیت' },
+            electric: { ar: 'كهرباء وشحن السيارات', en: 'EV & electrical', ku: 'کارەبا و شارژی ئۆتۆمبێل' },
+            fire: { ar: 'مركز إطفاء حريق', en: 'Fire safety center', ku: 'ناوەندی کوژاندنەوەی ئاگر' },
+            tow: { ar: 'سحب ونقل', en: 'Towing', ku: 'ڕاکێشان' },
+            other: { ar: 'نشاط آخر', en: 'Other', ku: 'چالاکیی تر' }
+        };
+        const SOCIAL_HOSTS = {
+            facebook: ['facebook.com', 'fb.com', 'fb.me'],
+            instagram: ['instagram.com'],
+            tiktok: ['tiktok.com']
+        };
+        const categoryLabel = key => (CATEGORY_LABELS[key] && CATEGORY_LABELS[key][currentLang]) || CATEGORY_LABELS.other[currentLang];
+
+        // رابط التواصل لا يُقبل إلا إذا كان https ومن النطاق الصحيح للمنصة نفسها
+        function safeSocialUrl(raw, network) {
+            const value = String(raw || '').trim();
+            if (!value) return '';
+            try {
+                const url = new URL(value);
+                const host = url.hostname.replace(/^www\./, '');
+                if (url.protocol !== 'https:') return '';
+                return SOCIAL_HOSTS[network].some(h => host === h || host.endsWith('.' + h)) ? url.href : '';
+            } catch (_) {
+                return '';
+            }
+        }
+
+        function makeAnchor(href, label, className, external) {
+            const a = document.createElement('a');
+            a.href = href;
+            a.className = className;
+            a.textContent = label;
+            if (external) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+            return a;
+        }
+
+        const BTN_SOCIAL = 'inline-flex items-center justify-center min-h-[40px] px-3 py-2 rounded text-xs font-bold border border-line hover:border-accent hover:text-accent transition';
+        const BTN_WA = 'inline-flex items-center justify-center min-h-[40px] px-3 py-2 rounded text-xs font-bold bg-green-600 hover:bg-green-700 text-white transition';
+
+        // ترتيب الأزرار: الاتصال بالرقم الشخصي، ثم واتساب، ثم فيسبوك، ثم إنستغرام، وآخراً تيك توك
+        // الحقل الفارغ أو الرقم التجريبي أو الرابط غير الصالح لا يُنتج أي زر
+        function appendContactButtons(container, c, showEmpty) {
+            let count = 0;
+            const personal = getUsablePhone(c.personalPhone);
+            if (personal) {
+                container.appendChild(makeAnchor(`tel:+${personal}`, `${t('btnCall')} ${formatDisplayPhone(c.personalPhone)}`, BTN_SOCIAL, false));
+                count++;
+            }
+            const wa = getUsablePhone(c.whatsapp);
+            if (wa) {
+                container.appendChild(makeAnchor(`https://wa.me/${wa}`, t('btnWhatsapp'), BTN_WA, true));
+                count++;
+            }
+            [['facebook', 'btnFacebook'], ['instagram', 'btnInstagram'], ['tiktok', 'btnTiktok']].forEach(([net, key]) => {
+                const url = safeSocialUrl(c[net], net);
+                if (url) {
+                    container.appendChild(makeAnchor(url, t(key), BTN_SOCIAL, true));
+                    count++;
+                }
+            });
+            if (!count && showEmpty) {
+                const note = document.createElement('p');
+                note.className = 'text-xs text-slate-400';
+                note.textContent = t('noContacts');
+                container.appendChild(note);
+            }
+            return count;
+        }
+
+        function renderProviderFilters() {
+            const sel = $('filter-category');
+            if (!sel) return;
+            const prev = sel.value;
+            sel.replaceChildren(new Option(t('allCategories'), ''));
+            Object.keys(CATEGORY_LABELS).forEach(key => sel.append(new Option(categoryLabel(key), key)));
+            sel.value = prev;
+        }
+
+        function renderProviders() {
+            const list = $('providers-list');
+            if (!list) return;
+            const selectedCat = $('filter-category')?.value || '';
+            const items = CONFIG.providers.filter(p => !selectedCat || p.category === selectedCat);
+            list.replaceChildren();
+
+            if (items.length === 0) {
+                const empty = document.createElement('p');
+                empty.className = 'text-sm text-slate-400 text-center py-6 sm:col-span-2 bg-panel border border-line rounded-xl';
+                empty.textContent = t('noProviders');
+                list.appendChild(empty);
+                return;
+            }
+
+            items.forEach(p => {
+                const card = document.createElement('article');
+                card.className = 'card-lift bg-panel border border-line p-5 rounded-2xl flex flex-col gap-3';
+
+                const head = document.createElement('div');
+                const title = document.createElement('h3');
+                title.className = 'font-bold';
+                title.textContent = p.name;
+                const meta = document.createElement('p');
+                meta.className = 'text-sm text-slate-400';
+                const gov = GOVS[p.governorate] ? GOVS[p.governorate][currentLang] : (p.governorate || '');
+                meta.textContent = [categoryLabel(p.category), gov, p.area].filter(Boolean).join(' · ');
+                head.append(title, meta);
+
+                if (p.hours) {
+                    const hours = document.createElement('p');
+                    hours.className = 'text-xs text-slate-400 mt-1';
+                    hours.textContent = `${t('regHoursLabel')}: ${p.hours}`;
+                    head.appendChild(hours);
+                }
+                if (p.description) {
+                    const desc = document.createElement('p');
+                    desc.className = 'text-sm text-slate-300 mt-2 leading-relaxed';
+                    desc.textContent = p.description;
+                    head.appendChild(desc);
+                }
+
+                const actions = document.createElement('div');
+                actions.className = 'flex flex-wrap gap-2 mt-auto';
+                appendContactButtons(actions, p, true);
+
+                card.append(head, actions);
+                list.appendChild(card);
+            });
+        }
+
+        // صاحب المنصة: يظهر في الأسفل فقط إذا وُضعت له وسيلة تواصل صالحة
+        function renderOwnerContact() {
+            const box = $('owner-contact');
+            const buttons = $('owner-contact-buttons');
+            if (!box || !buttons) return;
+            buttons.replaceChildren();
+            const count = appendContactButtons(buttons, CONFIG.owner, false);
+            box.classList.toggle('hidden', count === 0);
+        }
+
+        function renderRegFormOptions() {
+            const cat = $('reg-category');
+            const gov = $('reg-gov');
+            if (!cat || !gov) return;
+            const prevCat = cat.value;
+            const prevGov = gov.value;
+            cat.replaceChildren(new Option(t('choose'), ''));
+            Object.keys(CATEGORY_LABELS).forEach(key => cat.append(new Option(categoryLabel(key), key)));
+            cat.value = prevCat;
+            gov.replaceChildren(new Option(t('choose'), ''));
+            Object.keys(GOVS).forEach(key => gov.append(new Option(GOVS[key][currentLang] || key, key)));
+            gov.value = prevGov;
+        }
+
+        // حالة رسالة التسجيل تُحفظ كمفتاح ترجمة، فتتغير لغتها مع تبديل اللغة
+        let regState = { key: '', tone: '' };
+        function renderRegStatus() {
+            const el = $('reg-status');
+            if (!el) return;
+            el.textContent = regState.key ? t(regState.key) : '';
+            el.className = 'text-sm min-h-[1.5rem] ' + (regState.tone === 'error' ? 'text-red-300' : regState.tone === 'ok' ? 'text-emerald-300' : 'text-slate-300');
+        }
+        function setRegStatus(key, tone = '') {
+            regState = { key, tone };
+            renderRegStatus();
+        }
+
+        $('filter-category')?.addEventListener('change', renderProviders);
+
+        $('register-form').addEventListener('submit', event => {
+            event.preventDefault();
+            const val = id => $(id).value.trim();
+            const name = val('reg-name');
+            const category = $('reg-category').value;
+            const gov = $('reg-gov').value;
+            const personal = getUsablePhone(Phone.toAsciiDigits(val('reg-personal')));
+            const waRaw = val('reg-wa');
+            const wa = waRaw ? getUsablePhone(Phone.toAsciiDigits(waRaw)) : null;
+            const fb = val('reg-fb');
+            const ig = val('reg-ig');
+            const tt = val('reg-tt');
+            const consent = $('reg-consent').checked;
+
+            if (!name || !category || !gov || !personal || !consent) {
+                setRegStatus('regMissing', 'error');
+                return;
+            }
+            if (waRaw && !wa) {
+                setRegStatus('regInvalidPhone', 'error');
+                return;
+            }
+            if ((fb && !safeSocialUrl(fb, 'facebook')) || (ig && !safeSocialUrl(ig, 'instagram')) || (tt && !safeSocialUrl(tt, 'tiktok'))) {
+                setRegStatus('regInvalidLink', 'error');
+                return;
+            }
+            const admin = getUsablePhone(CONFIG.adminWhatsApp);
+            if (!admin) {
+                setRegStatus('regNoAdmin', 'error');
+                return;
+            }
+
+            const lines = [
+                'طلب تسجيل نشاط في دليل AutoSphere Global',
+                `الاسم: ${name}`,
+                `النوع: ${CATEGORY_LABELS[category].ar}`,
+                `المحافظة: ${gov}`,
+                `المنطقة: ${val('reg-area') || 'غير مذكورة'}`,
+                `الرقم الشخصي: +${personal}`,
+                `واتساب النشاط: ${wa ? '+' + wa : 'غير مذكور'}`,
+                `فيسبوك: ${fb || 'غير مذكور'}`,
+                `إنستغرام: ${ig || 'غير مذكور'}`,
+                `تيك توك: ${tt || 'غير مذكور'}`,
+                `ساعات العمل: ${val('reg-hours') || 'غير مذكورة'}`,
+                `الوصف: ${val('reg-desc') || 'بدون وصف'}`,
+                '',
+                'أقر بصحة المعلومات وأوافق على نشرها بعد المراجعة.'
+            ];
+
+            // نفس أسلوب واتساب في الطوارئ: نافذة فارغة أولاً، ثم نكتب الرابط فيها، فإن منعها المتصفح نعرض رسالة
+            const win = window.open('', '_blank');
+            if (!win) {
+                setRegStatus('regPopup', 'error');
+                return;
+            }
+            win.location.href = `https://wa.me/${admin}?text=${encodeURIComponent(lines.join('\n'))}`;
+            try { win.opener = null; } catch (_) {}
+            setRegStatus('regOpened', 'ok');
+        });
+
+        // ===== الواجهة: البحث والخريطة والتسجيل عبر واتساب =====
+        let heroQuery = '';
+        function renderHeroCity() {
+            const sel = $('hero-city');
+            if (!sel) return;
+            const prev = sel.value;
+            sel.replaceChildren(new Option(t('allCities'), ''));
+            Object.keys(GOVS).forEach(key => sel.append(new Option(GOVS[key][currentLang] || key, key)));
+            sel.value = prev;
+        }
+        $('hero-search-form').addEventListener('submit', event => {
+            event.preventDefault();
+            heroQuery = $('hero-search').value.trim();
+            $('filter-gov').value = $('hero-city').value;
+            renderCenters();
+            $('directory').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        document.querySelectorAll('.hero-quick').forEach(btn => btn.addEventListener('click', () => {
+            $('hero-search').value = btn.textContent.trim();
+            $('hero-search-form').requestSubmit();
+        }));
+        document.querySelectorAll('#dir-chips [data-service]').forEach(btn => btn.addEventListener('click', () => {
+            $('filter-service').value = btn.dataset.service;
+            renderCenters();
+            document.querySelectorAll('#dir-chips [data-service]').forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+        }));
+
+        // خريطة الأنشطة: تعمل حتى بدون أنشطة، وتظهر الأنشطة التي لها إحداثيات (lat, lng) في CONFIG.providers
+        let dirMap = null, dirMarkers = [], dirYou = null, dirStatusKey = '';
+        function setDirStatus(key) {
+            dirStatusKey = key || '';
+            $('dir-map-status').textContent = dirStatusKey ? t(dirStatusKey) : '';
+        }
+        function renderDirStatus() { setDirStatus(dirStatusKey); }
+        function renderDirPins() {
+            if (!dirMap) return;
+            dirMarkers.forEach(m => m.remove());
+            dirMarkers = [];
+            CONFIG.providers.forEach(p => {
+                if (p.lat == null || p.lng == null) return;
+                const lat = Number(p.lat), lng = Number(p.lng);
+                if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+                const label = document.createElement('div');
+                label.textContent = p.name;
+                dirMarkers.push(L.marker([lat, lng]).addTo(dirMap).bindPopup(label));
+            });
+            if (dirMarkers.length === 0 && !dirStatusKey) setDirStatus('mapNoPins');
+        }
+        function initDirMap() {
+            const el = $('dir-map');
+            if (!el) return;
+            if (!window.L) { setDirStatus('mapNoLeaflet'); return; }
+            dirMap = L.map(el, { scrollWheelZoom: false }).setView([33.2, 44.0], 6);
+            const layer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                referrerPolicy: 'strict-origin-when-cross-origin',
+                attribution: '&copy; OpenStreetMap'
+            });
+            layer.on('tileerror', () => setDirStatus('mapTileError'));
+            layer.addTo(dirMap);
+            renderDirPins();
+        }
+        $('dir-locate').addEventListener('click', () => {
+            if (!dirMap) { setDirStatus('mapNoLeaflet'); return; }
+            if (!navigator.geolocation) { setDirStatus('mapUnsupported'); return; }
+            setDirStatus('mapLocating');
+            navigator.geolocation.getCurrentPosition(pos => {
+                const ll = [pos.coords.latitude, pos.coords.longitude];
+                if (dirYou) dirYou.remove();
+                dirYou = L.circleMarker(ll, { radius: 9, color: '#fff', weight: 3, fillColor: '#2dd4bf', fillOpacity: 1 }).addTo(dirMap);
+                dirMap.setView(ll, 13);
+                setDirStatus('mapLocated');
+            }, () => setDirStatus('mapDenied'), { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 });
+        });
+
+        // بوابة التسجيل: بلا خادم لا يمكن التحقق فعلياً، لذلك تُرسل الطلبات إلى الإدارة عبر واتساب فقط
+        const GATE_KEY = 'as_registered';
+        const gateModal = $('gate-modal');
+        let gateSent = false;
+        let gateStatus = { key: '', tone: '' };
+        function isRegistered() {
+            try { return localStorage.getItem(GATE_KEY) === '1'; } catch (_) { return false; }
+        }
+        function renderGateStatus() {
+            const el = $('gate-status');
+            el.textContent = gateStatus.key ? t(gateStatus.key) : '';
+            el.className = 'text-sm min-h-[1.25rem] ' + (gateStatus.tone === 'error' ? 'text-red-300' : 'text-emerald-300');
+        }
+        function showGateIfNeeded() {
+            if (isRegistered() || !guideModal.classList.contains('hidden')) return;
+            gateModal.classList.remove('hidden');
+            gateModal.classList.add('flex');
+            $('gate-name').focus();
+        }
+        $('gate-form').addEventListener('submit', event => {
+            event.preventDefault();
+            const name = $('gate-name').value.trim();
+            const phone = getUsablePhone(Phone.toAsciiDigits($('gate-phone').value.trim()));
+            if (!name || !phone) { gateStatus = { key: 'gateInvalid', tone: 'error' }; renderGateStatus(); return; }
+            const admin = getUsablePhone(CONFIG.adminWhatsApp);
+            if (!admin) { gateStatus = { key: 'gateNoAdmin', tone: 'error' }; renderGateStatus(); return; }
+            const msg = `طلب تسجيل مستخدم في AutoSphere Global\nالاسم: ${name}\nالرقم: +${phone}`;
+            const win = window.open('', '_blank');
+            if (!win) { gateStatus = { key: 'gatePopup', tone: 'error' }; renderGateStatus(); return; }
+            win.location.href = `https://wa.me/${admin}?text=${encodeURIComponent(msg)}`;
+            try { win.opener = null; } catch (_) {}
+            gateSent = true;
+            $('gate-done').classList.remove('hidden');
+            gateStatus = { key: 'gateOpened', tone: 'ok' };
+            renderGateStatus();
+        });
+        $('gate-done').addEventListener('click', () => {
+            if (!gateSent) return;
+            try { localStorage.setItem(GATE_KEY, '1'); } catch (_) {}
+            gateModal.classList.add('hidden');
+            gateModal.classList.remove('flex');
+        });
+        // طلب النجدة متاح دائماً دون تسجيل
+        $('gate-emergency').addEventListener('click', () => {
+            gateModal.classList.add('hidden');
+            gateModal.classList.remove('flex');
+        });
+        // حصر التركيز داخل نافذة التسجيل حتى لا يتجاوزها لوحة المفاتيح إلى ما خلفها
+        document.addEventListener('keydown', event => {
+            if (event.key !== 'Tab' || gateModal.classList.contains('hidden')) return;
+            const items = Array.from(gateModal.querySelectorAll('input, button, a[href]')).filter(el => !el.disabled && el.offsetParent !== null);
+            if (!items.length) return;
+            const first = items[0], last = items[items.length - 1];
+            if (event.shiftKey && (document.activeElement === first || !gateModal.contains(document.activeElement))) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && (document.activeElement === last || !gateModal.contains(document.activeElement))) { event.preventDefault(); first.focus(); }
+        });
+
+        function validateEmergencyCallButton() {
+            const callBtnEl = $('call-emergency');
+            const callLabelEl = $('call-emergency-label');
+            const rawCall = CONFIG.emergencyCall;
+            
+            let callTarget = null;
+            if (isValidShortEmergency(rawCall)) {
+                callTarget = rawCall;
+            } else {
+                callTarget = getUsablePhone(rawCall);
+            }
+
+            if (callTarget) {
+                callBtnEl.href = 'tel:' + (isValidShortEmergency(callTarget) ? callTarget : '+' + callTarget);
+                callLabelEl.textContent = (isValidShortEmergency(callTarget) ? '' : '+') + callTarget;
+                callBtnEl.classList.remove('opacity-60', 'cursor-not-allowed', 'pointer-events-none');
+                callBtnEl.removeAttribute('aria-disabled');
+            } else {
+                callBtnEl.removeAttribute('href');
+                callLabelEl.textContent = `(${t('invalidNumber')})`;
+                callBtnEl.classList.add('opacity-60', 'cursor-not-allowed', 'pointer-events-none');
+                callBtnEl.setAttribute('aria-disabled', 'true');
+            }
+        }
+
+        function renderServiceOptions() {
+            const sel = $('filter-service');
+            const prev = sel.value;
+            sel.replaceChildren(new Option(t('allServices'), ''));
+            Object.entries(SERVICE_TYPES).forEach(([key, tk]) => sel.append(new Option(t(tk), key)));
+            sel.value = prev;
+        }
+
+        function renderGovOptions() {
+            const select = $('emergency-gov');
+            const filterGov = $('filter-gov');
+            const prev = select.value;
+            const prevFilter = filterGov.value;
+
+            select.replaceChildren(new Option(t('choose'), ''));
+            filterGov.replaceChildren(new Option(t('allGovs'), ''));
+
+            Object.keys(GOVS).forEach(key => {
+                const label = GOVS[key][currentLang];
+                select.append(new Option(label, key));
+                filterGov.append(new Option(label, key));
+            });
+
+            select.value = prev;
+            filterGov.value = prevFilter;
+        }
+
+        const locBtn = $('loc-btn');
+        const locMsgEl = $('loc-msg');
+        const mapEl = $('map');
+        const coordsWrap = $('coords-wrap');
+        let map = null, marker = null, circle = null;
+
+        function setLocMsg(key, tone = '', vars = {}) {
+            locMsg = { key, tone, vars };
+            renderLocMsg();
+        }
+
+        function renderLocMsg() {
+            locMsgEl.textContent = t(locMsg.key, locMsg.vars);
+            locMsgEl.className = 'text-xs min-h-[1.25rem] ' + (locMsg.tone === 'error' ? 'text-red-400' : locMsg.tone === 'good' ? 'text-mint' : locMsg.tone === 'warn' ? 'text-accent' : 'text-slate-400');
+        }
+
+        function getBestPosition() {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) return reject(new Error('unsupported'));
+                let best = null;
+                let finished = false;
+                let watchId = null;
+                let timer = null;
+
+                const finish = () => {
+                    if (finished) return;
+                    finished = true;
+                    navigator.geolocation.clearWatch(watchId);
+                    clearTimeout(timer);
+                    best ? resolve(best) : reject(new Error('timeout'));
+                };
+
+                watchId = navigator.geolocation.watchPosition(
+                    pos => {
+                        const r = { lat: pos.coords.latitude, lng: pos.coords.longitude, accuracy: pos.coords.accuracy };
+                        if (!best || r.accuracy < best.accuracy) best = r;
+                        if (best.accuracy <= 20) finish();
+                    },
+                    err => {
+                        if (finished) return;
+                        finished = true;
+                        navigator.geolocation.clearWatch(watchId);
+                        clearTimeout(timer);
+                        reject(err);
+                    },
+                    { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+                );
+                timer = setTimeout(finish, 12000);
+            });
+        }
+
+        function qualityMessage(acc, source) {
+            if (source === 'manual') return { key: 'locAdjusted', tone: 'good' };
+            const n = Math.round(acc);
+            if (acc <= 15) return { key: 'locGood', tone: 'good', vars: { n } };
+            if (acc <= 50) return { key: 'locMid', tone: 'warn', vars: { n } };
+            return { key: 'locLow', tone: 'error', vars: { n } };
+        }
+
+        function setPin(lat, lng, accuracy, source) {
+            if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) {
+                setLocMsg('locFail', 'error');
+                return;
+            }
+            pin = { lat, lng, accuracy: accuracy ?? pin?.accuracy ?? null, source };
+            showMapAndCoords();
+            const q = qualityMessage(pin.accuracy ?? 0, source);
+            setLocMsg(q.key, q.tone, q.vars || {});
+        }
+
+        function showMapAndCoords() {
+            const { lat, lng, accuracy } = pin;
+            coordsWrap.classList.remove('hidden');
+            $('coords').textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+            const link = $('coords-link');
+            link.href = `https://maps.google.com/?q=${lat.toFixed(6)},${lng.toFixed(6)}`;
+            link.textContent = t('openInMaps');
+
+            if (typeof L === 'undefined') {
+                mapEl.classList.add('hidden');
+                setMapStatus('mapLibFail');
+                return;
+            }
+
+            mapEl.classList.remove('hidden');
+            setMapStatus('');
+            const radius = Math.max(accuracy ?? 20, 10);
+            try {
+                if (!map) {
+                    map = L.map(mapEl).setView([lat, lng], 17);
+                    const tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        // OSM يرفض الطلبات بلا مُرسِل (Referer)، لذلك نرسل نطاق الصفحة فقط
+                        referrerPolicy: 'strict-origin-when-cross-origin',
+                        attribution: '&copy; OpenStreetMap'
+                    });
+                    tileLayer.on('tileerror', () => {
+                        mapEl.classList.add('hidden');
+                        setMapStatus('mapTileError');
+                    });
+                    tileLayer.addTo(map);
+
+                    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+                    circle = L.circle([lat, lng], { radius, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.12, weight: 1 }).addTo(map);
+                    marker.on('dragend', () => {
+                        const p = marker.getLatLng();
+                        circle.setLatLng(p);
+                        setPin(p.lat, p.lng, null, 'manual');
+                    });
+                } else {
+                    marker.setLatLng([lat, lng]);
+                    circle.setLatLng([lat, lng]).setRadius(radius);
+                    map.setView([lat, lng], Math.max(map.getZoom(), 16));
+                    setTimeout(() => map.invalidateSize(), 50);
+                }
+            } catch (err) {
+                mapEl.classList.add('hidden');
+                setMapStatus('mapInitError');
+            }
+        }
+
+        // رسالة المركز تُكتب بلغة الواجهة التي اختارها المستخدم
+        function buildLocationText() {
+            if (!pin) return t('msgLocNotSet');
+            const lat = pin.lat.toFixed(6);
+            const lng = pin.lng.toFixed(6);
+            const src = pin.source === 'manual' ? t('msgLocManual') : t('msgLocAuto');
+            const acc = pin.accuracy != null ? ` | ${t('msgAccuracy', { n: Math.round(pin.accuracy) })}` : '';
+            return `${t('msgCoords')}: ${lat}, ${lng}${acc} (${src})\n${t('msgMapLink')}: https://maps.google.com/?q=${lat},${lng}`;
+        }
+
+        locBtn.addEventListener('click', async () => {
+            if (!navigator.geolocation) {
+                setLocMsg('locUnsupported', 'error');
+                return;
+            }
+            locBtn.disabled = true;
+            setLocMsg('locSearching');
+            try {
+                const r = await getBestPosition();
+                setPin(r.lat, r.lng, r.accuracy, 'gps');
+            } catch (err) {
+                if (err && err.code === 1) setLocMsg('locDenied', 'error');
+                else if (err && err.message === 'unsupported') setLocMsg('locUnsupported', 'error');
+                else setLocMsg('locFail', 'error');
+            } finally {
+                locBtn.disabled = false;
+            }
+        });
+
+        // ============================================================
+        // أنواع السيارات والأسئلة حسب نوع الطارئ
+        // ============================================================
+        const FUEL_VEHICLES = ['vFuel', 'vHybrid'];
+        const TYPES_BY_VEHICLE = {
+            vFuel:   ['type_mechanical', 'type_fuel', 'type_fuel_delivery', 'type_tire', 'type_accident', 'type_other'],
+            vHybrid: ['type_mechanical', 'type_fuel', 'type_fuel_delivery', 'type_tire', 'type_accident', 'type_hybrid_battery', 'type_other'],
+            vEv:     ['type_mechanical', 'type_ev_battery', 'type_ev_charge', 'type_ev_warning', 'type_tire', 'type_accident', 'type_other']
+        };
+        const QUESTIONS = {
+            type_tire: [
+                { id: 'spare', label: 'qSpare', options: ['optYes', 'optNo'] },
+                { id: 'tirePos', label: 'qTirePos', options: ['posFL', 'posFR', 'posRL', 'posRR', 'optUnknown'] },
+                { id: 'roadSafe', label: 'qRoadSafe', options: ['optYes', 'optNo'] }
+            ],
+            type_fuel: [{ id: 'fuelProblem', label: 'qFuelProblem', options: ['probOut', 'probBatt'] }],
+            type_fuel_delivery: [{ id: 'amount', label: 'qFuelAmount', options: ['amt10', 'amt20', 'amt40'] }],
+            type_mechanical: [
+                { id: 'start', label: 'qStart', options: ['optYes', 'optNo'] },
+                { id: 'warn', label: 'qWarningLight', options: ['optYes', 'optNo'] }
+            ],
+            type_accident: [
+                { id: 'injury', label: 'qInjury', options: ['optYes', 'optNo'] },
+                { id: 'block', label: 'qBlock', options: ['optYes', 'optNo'] }
+            ],
+            type_ev_battery: [{ id: 'charge', label: 'qCharge', options: ['chg10', 'chg25', 'chg99', 'optUnknown'] }],
+            type_ev_charge: [
+                { id: 'charger', label: 'qChargerType', options: ['chHome', 'chPublic', 'chMobile'] },
+                { id: 'chargeFault', label: 'qChargeFault', options: ['cfNoStart', 'cfStops', 'cfError'] }
+            ],
+            type_ev_warning: [
+                { id: 'evMsg', label: 'qEvMsg', options: ['evPower', 'evTemp', 'evInsul', 'evOther'] },
+                { id: 'evMoving', label: 'qEvMoving', options: ['optYes', 'optNo'] }
+            ],
+            type_hybrid_battery: [{ id: 'hyb', label: 'qHybShow', options: ['hybWarn', 'hybPower', 'hybStop'] }]
+        };
+
+
+        function renderVehicleFields() {
+            const veh = $('emergency-vehicle').value;
+
+            const fuelSel = $('emergency-fuel');
+            const prevFuel = fuelSel.value;
+            fuelSel.replaceChildren(
+                new Option(t('choose'), ''),
+                new Option(t('fuelPetrol'), 'fuelPetrol'),
+                new Option(t('fuelDiesel'), 'fuelDiesel'),
+                new Option(t('fuelGas'), 'fuelGas')
+            );
+            fuelSel.value = prevFuel;
+            $('fuel-wrap').classList.toggle('hidden', !FUEL_VEHICLES.includes(veh));
+
+            const typeSel = $('emergency-type');
+            const prevType = typeSel.value;
+            const types = TYPES_BY_VEHICLE[veh] || [];
+            typeSel.replaceChildren(new Option(veh ? t('choose') : t('chooseVehicleFirst'), ''));
+            types.forEach(k => typeSel.append(new Option(t(k), k)));
+            typeSel.disabled = !veh;
+            typeSel.value = types.includes(prevType) ? prevType : '';
+
+            renderQuestions();
+        }
+
+        function renderQuestions() {
+            const container = $('dynamic-questions');
+            const prev = {};
+            container.querySelectorAll('select').forEach(sel => { prev[sel.id] = sel.value; });
+            container.replaceChildren();
+
+            (QUESTIONS[$('emergency-type').value] || []).forEach(q => {
+                const wrap = document.createElement('div');
+                const label = document.createElement('label');
+                label.className = 'block mb-1 text-sm';
+                label.htmlFor = `q-${q.id}`;
+                label.textContent = t(q.label) + ' *';
+
+                const sel = document.createElement('select');
+                sel.id = `q-${q.id}`;
+                sel.className = 'w-full bg-ink border border-line rounded px-3 py-2 focus:border-accent outline-none';
+                sel.append(new Option(t('choose'), ''));
+                q.options.forEach(opt => sel.append(new Option(t(opt), opt)));
+                sel.value = prev[sel.id] || '';
+                sel.addEventListener('change', updateInjuryAlert);
+
+                wrap.append(label, sel);
+                container.appendChild(wrap);
+            });
+            updateInjuryAlert();
+        }
+
+        function updateInjuryAlert() {
+            const injury = $('q-injury');
+            $('injury-alert').classList.toggle('hidden', !(injury && injury.value === 'optYes'));
+        }
+
+        // أجوبة الأسئلة الظاهرة بالعربية لرسالة المركز
+        function answerLines() {
+            const qs = QUESTIONS[$('emergency-type').value] || [];
+            return qs.map(q => `${t(q.label)} ${t($(`q-${q.id}`).value)}`);
+        }
+
+        function updateEvNotices() {
+            const isEv = $('emergency-vehicle').value === 'vEv';
+            $('ev-safety').classList.toggle('hidden', !isEv);
+            $('ev-tow-warn').classList.toggle('hidden', !(isEv && $('emergency-tow').value === 'tow_rope'));
+        }
+
+        // ---------- الهاتف: معاينة الصيغة المحلية ----------
+        function updatePhonePreview() {
+            const input = $('emergency-phone');
+            const out = $('phone-preview');
+            const raw = input.value.trim();
+            if (!raw) {
+                out.textContent = '';
+                input.removeAttribute('aria-invalid');
+                return;
+            }
+            const display = Phone.formatLocalDisplay(raw);
+            if (display) {
+                out.textContent = `${t('phoneLocalLabel')} ${display}`;
+                out.className = 'text-xs text-mint mt-1 min-h-[1rem]';
+                input.removeAttribute('aria-invalid');
+            } else {
+                out.textContent = t('errPhone');
+                out.className = 'text-xs text-red-400 mt-1 min-h-[1rem]';
+                input.setAttribute('aria-invalid', 'true');
+            }
+        }
+
+        // ---------- الخريطة: رسالة مستقلة لا تُخفي رسالة الموقع ----------
+        let mapStatusKey = '';
+        function setMapStatus(key) {
+            mapStatusKey = key;
+            renderMapStatus();
+        }
+        function renderMapStatus() {
+            $('map-status').textContent = mapStatusKey ? t(mapStatusKey) : '';
+        }
+
+        const form = $('emergency-form');
+        const formStatus = $('form-status');
+        const submitBtn = $('submit-btn');
+
+        // حالة النموذج تُخزَّن كمفتاح ومتغيرات ونوع، وتُعاد كتابتها عند تبديل اللغة
+        let formState = null;
+        function showStatus(key, tone = 'info', vars = {}, extra = {}) {
+            formState = { key, tone, vars, link: extra.link || null, live: !!extra.live };
+            renderFormStatus();
+        }
+
+        function renderFormStatus() {
+            if (!formState) {
+                formStatus.replaceChildren();
+                formStatus.className = 'text-sm min-h-[1.5rem]';
+                formStatus.removeAttribute('role');
+                return;
+            }
+            const { key, tone, vars, link, live } = formState;
+            const nodes = [document.createTextNode(t(key, vars))];
+            if (link) {
+                const a = document.createElement('a');
+                a.href = link.url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.className = 'underline font-bold block mt-2';
+                a.textContent = t(link.labelKey);
+                nodes.push(a);
+            }
+            if (live) {
+                // تنبيه بارز لمشاركة الموقع المباشر، لأن فرق الإنقاذ تحتاجه لمتابعة الموقع
+                const p = document.createElement('p');
+                p.className = 'mt-3 rounded border-2 border-accent bg-accent/10 p-3 text-sm font-bold text-accent leading-relaxed';
+                p.setAttribute('data-live-hint', '');
+                p.textContent = t('liveHint');
+                nodes.push(p);
+            }
+            formStatus.replaceChildren(...nodes);
+            formStatus.className = 'text-sm min-h-[1.5rem] ' + (tone === 'error' ? 'text-red-400' : 'text-mint');
+            formStatus.setAttribute('role', tone === 'error' ? 'alert' : 'status');
+        }
+
+        function showError(key, field) {
+            showStatus(key, 'error');
+            if (field) {
+                field.setAttribute('aria-invalid', 'true');
+                field.focus();
+            }
+        }
+
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+
+            const nameField = $('emergency-name');
+            const phoneField = $('emergency-phone');
+            const govField = $('emergency-gov');
+            const vehicleField = $('emergency-vehicle');
+            const fuelField = $('emergency-fuel');
+            const typeField = $('emergency-type');
+            const towField = $('emergency-tow');
+            const brandField = $('emergency-brand');
+            const landmarkField = $('emergency-landmark');
+            const descField = $('emergency-desc');
+            const consentField = $('emergency-consent');
+
+            const name = nameField.value.trim().replace(/\s+/g, ' ');
+            if (name.length < 3) return showError('errName', nameField);
+
+            const phone = normalizeIraqiMobile(phoneField.value);
+            if (!phone) return showError('errPhone', phoneField);
+
+            if (!govField.value) return showError('errGov', govField);
+            if (!vehicleField.value) return showError('errVehicle', vehicleField);
+            if (FUEL_VEHICLES.includes(vehicleField.value) && !fuelField.value) return showError('errFuel', fuelField);
+            if (!typeField.value) return showError('errType', typeField);
+            const unanswered = [...document.querySelectorAll('#dynamic-questions select')].find(sel => !sel.value);
+            if (unanswered) return showError('errQuestion', unanswered);
+            if (!towField.value) return showError('errTow', towField);
+            if (!pin && !landmarkField.value.trim()) return showError('errLocation', locBtn);
+            if (!consentField.checked) return showError('errConsent', consentField);
+
+            // التحقق من الرقم المستهدف قبل فتح أي رابط
+            const target = getUsablePhone(CONFIG.emergencyWhatsApp);
+            if (!target) return showError('errNoTarget');
+
+            const win = window.open('', '_blank');
+
+            submitBtn.disabled = true;
+            showStatus('sending');
+
+            try {
+                const vehicleLine = `نوع السيارة: ${t(vehicleField.value)}`
+                    + (FUEL_VEHICLES.includes(vehicleField.value) ? ` - الوقود: ${t(fuelField.value)}` : '')
+                    + (brandField.value.trim() ? ` - الماركة: ${brandField.value.trim()}` : '');
+
+                const message = [
+                    t('msgTitle'),
+                    `${t('msgName')}: ${name}`,
+                    `${t('msgPhone')}: +${phone}`,
+                    `${t('msgGov')}: ${govField.value}`,
+                    vehicleLine,
+                    `${t('msgType')}: ${t(typeField.value)}`,
+                    ...answerLines(),
+                    `${t('msgTow')}: ${t(towField.value)}`,
+                    `${t('msgLandmark')}: ${landmarkField.value.trim() || t('msgNone')}`,
+                    `${t('msgDesc')}: ${descField.value.trim() || t('msgNoDesc')}`,
+                    `${t('msgLoc')}: ${buildLocationText()}`
+                ].join('\n');
+
+                // encodeURIComponent يحفظ الرسالة كاملة مهما احتوت من & و ? و # والمسافات والعربية
+                const url = `https://wa.me/${target}?text=${encodeURIComponent(message)}`;
+
+                const link = { url, labelKey: 'openWA' };
+                if (win) {
+                    win.location.href = url;
+                    try { win.opener = null; } catch (_) {}
+                    showStatus('sentOk', 'info', {}, { link, live: true });
+                } else {
+                    showStatus('popupBlocked', 'error', {}, { link });
+                }
+            } catch (err) {
+                if (win) win.close();
+                showError('errGeneric');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        $('year').textContent = new Date().getFullYear();
+
+        $('emergency-vehicle').addEventListener('change', () => { renderVehicleFields(); updateEvNotices(); });
+        $('emergency-tow').addEventListener('change', updateEvNotices);
+        $('emergency-type').addEventListener('change', renderQuestions);
+        // الأرقام العربية أو الفارسية المكتوبة أو الملصوقة تتحول فوراً إلى 0-9 داخل الحقل نفسه.
+        // التحويل حرف بحرف، لذلك يبقى موضع المؤشر كما هو.
+        $('emergency-phone').addEventListener('input', e => {
+            const el = e.target;
+            const ascii = Phone.toAsciiDigits(el.value);
+            if (ascii !== el.value) {
+                const pos = el.selectionStart;
+                el.value = ascii;
+                el.setSelectionRange(pos, pos);
+            }
+            updatePhonePreview();
+        });
+
+        $('filter-gov').addEventListener('change', renderCenters);
+        $('filter-service').addEventListener('change', renderCenters);
+        langSelect.addEventListener('change', () => applyLang(langSelect.value));
+
+        // إذا لم يكن رقم استقبال الطلبات صالحاً أو تجريبياً: يُعطَّل الزر ويظهر إشعار عام للزائر.
+        // تفاصيل الإعداد تبقى في console للمطور فقط.
+        if (!getUsablePhone(CONFIG.emergencyWhatsApp)) {
+            submitBtn.disabled = true;
+            showStatus('submitUnavailable', 'error');
+        }
+
+        applyLang(detectInitialLang());
+        initDirMap();
+        showGateIfNeeded();
+        validateEmergencyCallButton();
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => {
+                    console.warn('[AutoSphere ServiceWorker]: Registration failed:', err);
+                });
+            });
+        }
+    })();
+    </script>
+</body>
+</html>
